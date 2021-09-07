@@ -30,7 +30,8 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "baseHref": "/quality-demo/"
+            "baseHref": "/quality-demo/",
+            "deployUrl": "/quality-demo/"
           },
           "configurations": {
             "production": {
