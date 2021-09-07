@@ -30,6 +30,6 @@ jobs:
       env:
         REPO: self
         BRANCH: gh-pages
-        FOLDER: dist/qualit-demo
+        FOLDER: dist/quality-demo
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
