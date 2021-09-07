@@ -18,31 +18,15 @@ jobs:
 
       - run: npm install
              npm run build
+      - run: ls ${{ github.workspace }}
       - uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
-      - name: Upload math result for build job
+      - name: Upload result
         uses: actions/upload-artifact@v2
         with:
           name: webpage
-          path: dist/
-          
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Getting folder
-        uses: actions/download-artifact@v2
-        with:
-            name: webpage
-
-      - name: Copying folder
-        uses: s0/git-publish-subdir-action@develop
-        env:
-            REPO: self
-            BRANCH: gh-pages
-            FOLDER: quality-demo
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ github.workspace }}/dist/
+       
 
     
