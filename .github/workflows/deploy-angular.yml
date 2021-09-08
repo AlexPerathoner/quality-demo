@@ -9,25 +9,18 @@ on:
   
 jobs:
 
-  secrets-in-github-actions:
-    runs-on: ubuntu-latest
-
-    steps:
-      # Use a GitHub Actions secret variable in a bash shell
-      - name: Setting Targomo API Key
-        shell: bash
-        env: 
-          Targomo_API_KEY: ${{ secrets.Targomo_API_KEY }}
-          MapBox_API_KEY: ${{ secrets.MapBox_API_KEY }}
-        run: echo "Ready to go!"
-
-
   deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
     steps:
+    - name: Setting Targomo API Key
+      shell: bash
+      env: 
+        Targomo_API_KEY: ${{ secrets.Targomo_API_KEY }}
+        MapBox_API_KEY: ${{ secrets.MapBox_API_KEY }}
+      run: echo "Ready to go!"
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
