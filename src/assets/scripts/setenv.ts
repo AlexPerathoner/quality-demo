@@ -13,6 +13,9 @@ function writeFileUsingFS(targetPath: any, environmentFileContent: any) {
 
       if(environmentFileContent !== '') {
          console.log(`Wrote variables to ${targetPath}`)
+        if(process.env.Targomo_API_KEY) {
+          console.log('Got Key')
+        }
       }
    })
 }
