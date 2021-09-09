@@ -1,0 +1,16 @@
+#widget-container-top-left, #widget-container-top-right, #widget-container-bottom-right, #widget-container-bottom-left {
+    position: absolute;
+    width: 250px;
+}
+#widget-container-top-left {
+    top: 10px; left: 10px;
+}
+#widget-container-top-right {
+    top: 10px; right: 10px;
+}
+#widget-container-bottom-left {
+    bottom: 0px; left: 10px;
+}
+#widget-container-bottom-right {
+    bottom: 10px; right: 10px;
+}

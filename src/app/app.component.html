@@ -1,1 +1,9 @@
 <app-map></app-map>
+<app-sidebar corner='top-left'>
+	<app-widget id="locations" title="Locations:" [options]="[{name: 'Relative scores', id:'relativeScores'}]">
+	</app-widget>
+</app-sidebar>
+<app-sidebar corner='top-right'>
+	<app-settings-btn></app-settings-btn>
+</app-sidebar>
+<app-settings-view></app-settings-view>

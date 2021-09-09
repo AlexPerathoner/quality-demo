@@ -1,0 +1,38 @@
+.widget {
+    background: white;
+	border-radius: 0.5rem;
+	box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px 0 rgba(0,0,0,.14),0 1px 14px 0 rgba(0,0,0,.12);
+	margin-bottom: 1rem;
+	padding: 1rem;
+	font-size: small;
+}
+
+.option-container {
+	height: 20px;
+	margin-bottom: 1rem;
+}
+
+.widget-content {
+    overflow-y: auto;
+    max-height: 300px;
+	font-weight: 600;
+}
+
+.widget-title {
+	font-size: 1rem;
+	font-weight: 800;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: normal;
+	letter-spacing: normal;
+	padding-bottom: 1rem;
+}
+
+.slide-btn-container {
+	height: 20px;
+	float: right;
+}
+
+.option-label {
+	line-height: 20px;
+}

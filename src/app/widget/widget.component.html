@@ -1,0 +1,15 @@
+<div class='widget' id = '{{ id }}'>
+    
+    <header class="widget-title">
+        <b>{{ title }}</b>
+    </header>
+    <div class="option-container" *ngFor="let item of options">
+        <span class="option-label">{{ item.name }}</span>
+        <div class="slide-btn-container">
+            <mat-slide-toggle (change)='toggle($event)' id='{{ item.id }}' disableRipple=true></mat-slide-toggle>
+        </div>
+    </div>
+    <div class="widget-content" id="{{ id }}-content">
+    <ng-content></ng-content>
+    </div>
+</div>
