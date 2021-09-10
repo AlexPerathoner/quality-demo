@@ -1,0 +1,179 @@
+
+
+[data-animation="slideInOutLeft"] .modal-dialog {
+    opacity: 0;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+}
+  
+  
+@keyframes fadeInOpacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+  
+[data-animation="slideInOutLeft"].is-visible .modal-dialog {
+    opacity: 1;
+}
+  
+:root {
+    --lightgray: #efefef;
+    --blue: steelblue;
+    --white: #fff;
+    --black: rgba(0, 0, 0, 0.8);
+    --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
+    --selected: rgb(38, 69, 75);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: inherit;
+}
+
+  /*CUSTOM VARIABLES HERE*/
+ 
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font: 16px/1.5 sans-serif;
+}
+   
+.btn-group {
+    text-align: center;
+}
+   
+.open-modal {
+    font-weight: bold;
+    background: var(--blue);
+    color: var(--white);
+    padding: .75rem 1.75rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+/*CUSTOM VARIABLES HERE*/
+ 
+.modal { 
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.1s ease-in;
+    z-index: 999;
+}
+
+.modal-dialog {
+    position: relative;
+    width: 800px;
+    height: 80vh;
+    max-height: 80vh;
+    border-radius: 5px;
+    background: var(--white);
+    overflow: auto;
+    cursor: default;
+  }
+
+   
+.modal-dialog > * {
+    padding: 1rem;
+  }
+   
+  .modal-header,
+  .modal-footer {
+    background: var(--lightgray);
+  }
+   
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+  }
+   
+  .modal-header .modal-close {
+    font-size: 1.5rem;
+  }
+   
+  .modal p + p {
+    margin-top: 1rem;
+  }
+
+  .modal {
+    visibility: hidden;
+    opacity: 0;
+  }
+   
+  .modal.is-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+.loop-overlay-individual-select {
+      display: flex;
+}
+.label {
+	font-size: 10px;
+	font-weight: 400;
+	text-align: center;
+}
+.tgm-traveltype-select {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.tgm-simple-button {
+	display: block;
+	float: left;
+	margin-right: 8px;
+	color: rgb(0, 36, 43)
+}
+
+.selected-button {
+	background-color: var(--selected);
+	color: rgb(255, 255, 255);
+}
+
+.button-inner {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+.option-button {
+	font-family: "Roboto";
+	font-weight: 600;
+	font-size: small;
+	background-color: var(--selected);
+	float:right;
+	color: white;
+}
+
+.option-button:hover {
+	background-color: #ddd;
+	color: var(--selected);
+}

@@ -36,8 +36,6 @@ export class MapService {
     startLocations.forEach((elem) => {
       this.addMarker(elem)
     })
-    
-    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
   }
 
   addMarker(latLng: LatLng) {
@@ -45,42 +43,18 @@ export class MapService {
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
-    const markerIndex = this.sourceMarkers.length+""
+    const markerId = this.sourceMarkers.length+""
     marker.on('dragend', () => {
-      this.locationsWidget.selectedLocation = markerIndex
+      this.locationsWidget.selectedLocation = markerId
       this.updateMap()
     })
 
     marker.getElement().addEventListener('click', () => {
-      this.selectMarker(markerIndex)
+      const id = (parseInt(markerId)+1)+""
+      this.locationsWidget.selectMarker(id)
     });
     this.sourceMarkers.push(marker)
     this.updateLocationsWidget()
-  }
-
-  updateLocationsWidget() {
-    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
-  }
-
-  selectMarker(markerIndex: string) {
-    const features = document.getElementsByClassName('location')
-    for(let i=0; features.length; i++) {
-      const element: any = features[i] // Element type has dataset, as it was manually added. Adding any to silence error on next line, when accessing dataset in Element
-      if(element.dataset.markerIndex == markerIndex) { // checking for dataset. When the table gets ordered by the result the index of the cell and its marker index don't match anymore
-          element.classList.add("selected-location")
-      } else {
-          element.classList.remove("selected-location")
-      }
-    };
-    this.locationsWidget.selectedLocation = markerIndex
-    this.flyToMarker(this.sourceMarkers[this.locationsWidget.selectedLocation])
-  }
-
-  flyToMarker(currentFeature: mapboxgl.Marker) {
-    this.map.flyTo({
-      center: currentFeature.getLngLat(),
-      zoom: 14
-    });
   }
 
   updateMap() {
@@ -89,6 +63,17 @@ export class MapService {
     //this.mapLoading.hide()
   }
 
+  updateLocationsWidget() {
+    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
+  }
+
+  flyToMarker(markerIndex: number) {
+    const currentFeature = this.sourceMarkers[markerIndex]
+    this.map.flyTo({
+      center: currentFeature.getLngLat(),
+      zoom: 14
+    });
+  }
 
   getMarkersLocations(): LatLngId[] {
     let locations: LatLngId[] = []

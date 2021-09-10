@@ -57,6 +57,25 @@ export class LocationWidgetComponent implements OnInit {
   }
 
 
+  public selectMarker(markerIndex: string) {
+    const features = document.getElementsByClassName('location')
+    for(let i=0; i<features.length; i++) {
+      const element: any = features[i] // Element type has dataset, as it was manually added. Adding any to silence error on next line, when accessing dataset in Element
+      if(element.dataset.markerIndex == markerIndex) { // checking for dataset. When the table gets ordered by the result the index of the cell and its marker index don't match anymore
+        element.classList.add("selected-location")
+      } else {
+        element.classList.remove("selected-location")
+      }
+    };
+    this.selectedLocation = markerIndex
+    this.map.flyToMarker(parseInt(markerIndex)-1)
+    if(!this.useAbsoluteScores) {
+      this.updateRatingsCircles()
+    }
+  }
+
+
+
   /*
   Conic gradients are not supported in all browsers (https://caniuse.com/#feat=css-conic-gradients), so this pen includes the CSS conic-gradient() polyfill by Lea Verou (https://leaverou.github.io/conic-gradient/)
   */
