@@ -1,0 +1,21 @@
+
+<app-widget id="locations" title="Locations:">
+    {{ locations.length }}
+    <div class="option-container">
+        <span class="option-label">Use absolute scores</span>
+        <div class="slide-btn-container">
+            <mat-slide-toggle (change)='toggleScoringSystem($event)' id='absoluteScoresBtn' disableRipple=true></mat-slide-toggle>
+        </div>
+    </div>
+    <div class="widget-content" id="locations-content">
+        <div *ngFor="let location of locations">
+            <div class='location' [ngClass]="{'selected-location': location.id == selectedLocationId}" data-marker-index="+id+" onclick='selectMarker(" + id + ")'>
+                <span class="location-name">Marker {{ location.id }} </span>                
+                <div [ngClass]="{'absolute-rating': useAbsoluteScores, 'rating': !useAbsoluteScores}">
+                    {{ location.scores.stats }}
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</app-widget>

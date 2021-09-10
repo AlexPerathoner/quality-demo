@@ -90,3 +90,99 @@ button.mat-ripple:not(.selected-button):not(.option-button):hover {
 .mat-slide-toggle.mat-accent {
     height: 20px !important;
 }
+
+
+
+
+
+
+/* ----- The actual thing ----- */
+
+/* Variables */
+
+:root {
+  --rating-size: 32px;
+  --bar-size: 4px;
+  --background-color: #e7f2fa;
+  --rating-color-default: #2980b9;
+  --rating-color-background: #c7e1f3;
+  --rating-color-good: #27ae60;
+  --rating-color-meh: #f1c40f;
+  --rating-color-bad: #e74c3c;
+}
+
+/* Rating item */
+.rating {
+  float:right;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  overflow: hidden;
+  
+  background: var(--rating-color-default);
+  color: var(--rating-color-default);
+  width: var(--rating-size);
+  height: var(--rating-size);
+
+  /* Basic style for the text */
+  font-size: calc(var(--rating-size) / 3);
+  line-height: 1;
+}
+
+/* Rating circle content */
+.rating span {
+  position: relative;
+  display: flex;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.rating span small {
+  font-size: 0.25em;
+  font-weight: 900;
+  align-self: center;
+}
+
+/* Bar mask, creates an inner circle with the same color as thee background */
+.rating::after {
+  content: "";
+  position: absolute;
+  top: var(--bar-size);
+  right: var(--bar-size);
+  bottom: var(--bar-size);
+  left: var(--bar-size);
+  background: var(--background-color);
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* Bar background */
+.rating::before {
+  content: "";
+  position: absolute;
+  top: var(--bar-size);
+  right: var(--bar-size);
+  bottom: var(--bar-size);
+  left: var(--bar-size);
+  border-radius: inherit;
+  box-shadow: 0 0 0 0.5rem var(--rating-color-background);
+  z-index: -1;
+}
+
+/* Classes to give different colors to ratings, based on their score */
+.rating.good {
+  background: var(--rating-color-good);
+  color: var(--rating-color-good);
+}
+
+.rating.meh {
+  background: var(--rating-color-meh);
+  color: var(--rating-color-meh);
+}
+
+.rating.bad {
+  background: var(--rating-color-bad);
+  color: var(--rating-color-bad);
+}

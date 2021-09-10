@@ -1,0 +1,44 @@
+
+.option-container {
+	height: 20px;
+	margin-bottom: 1rem;
+}
+
+.slide-btn-container {
+	height: 20px;
+	float: right;
+}
+
+.option-label {
+	line-height: 20px;
+}
+
+.widget-content {
+    overflow-y: auto;
+    max-height: 300px;
+	font-weight: 600;
+}
+
+.location-name {
+	line-height: 32px;
+}
+
+.absolute-rating {
+	line-height: 32px;
+	color: var(--selected);
+	text-align: right;
+	float: right;
+	font-weight: 800;
+}
+
+.location {
+	border-radius: 8px;
+	padding-right: .5em;
+	padding-left: .5em;
+	margin-bottom: .5em;
+	height: 32px;
+}
+
+.selected-location {
+	background-color: var(--lightgray);
+}

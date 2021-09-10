@@ -10,6 +10,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsViewComponent } from './settings-view/settings-view.component';
+import { LocationWidgetComponent } from './location-widget/location-widget.component';
 
 @NgModule({
   declarations: [
@@ -19,12 +20,13 @@ import { SettingsViewComponent } from './settings-view/settings-view.component';
     WidgetComponent,
     SettingsBtnComponent,
     SettingsViewComponent,
+    LocationWidgetComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatSlideToggleModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

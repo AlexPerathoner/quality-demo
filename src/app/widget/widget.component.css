@@ -7,17 +7,6 @@
 	font-size: small;
 }
 
-.option-container {
-	height: 20px;
-	margin-bottom: 1rem;
-}
-
-.widget-content {
-    overflow-y: auto;
-    max-height: 300px;
-	font-weight: 600;
-}
-
 .widget-title {
 	font-size: 1rem;
 	font-weight: 800;
@@ -26,13 +15,4 @@
 	line-height: normal;
 	letter-spacing: normal;
 	padding-bottom: 1rem;
-}
-
-.slide-btn-container {
-	height: 20px;
-	float: right;
-}
-
-.option-label {
-	line-height: 20px;
 }

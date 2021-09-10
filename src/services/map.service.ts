@@ -1,27 +1,21 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
 import { environment } from "../environments/environment"
-import { LatLng, LatLngId, LatLngIdScores, TravelMode } from '@targomo/core'
-import { QualityRequest } from './quality-requests.service'
+import { LatLng, LatLngId } from '@targomo/core'
+import { LocationWidgetComponent } from 'app/location-widget/location-widget.component'
 
 @Injectable({providedIn: 'root'})
 
 export class MapService {
   map!: mapboxgl.Map
   style = `https://api.maptiler.com/maps/positron/style.json?key=${environment.MapBox_API_KEY}`
-  lat = 45.899977
-  lng = 6.172652
+  lng = -0.0754
+  lat = 51.51626
   zoom = 12
   sourceMarkers: mapboxgl.Marker[] = []
-  selectedLocation: number | null = null
-  private _useAbsoluteScores = false
-  get useAbsoluteScores() { return this._useAbsoluteScores; }
-  set useAbsoluteScores(value) {
-    this._useAbsoluteScores = value
-    this.updateLocationLabel()
-  }
+  locationsWidget: LocationWidgetComponent
   
-  constructor(private quality: QualityRequest, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(@Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -38,12 +32,12 @@ export class MapService {
     this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
     this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
-
-    const startLocations = [{lat: -0.0754, lng: 51.51626},{lat: -0.05, lng: 51.51}]
+    const startLocations = [{lng: -0.0754, lat: 51.51626}, {lng: -0.05, lat: 51.51}]
     startLocations.forEach((elem) => {
       this.addMarker(elem)
     })
-
+    
+    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
   }
 
   addMarker(latLng: LatLng) {
@@ -51,9 +45,9 @@ export class MapService {
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
-    const markerIndex = this.sourceMarkers.length
+    const markerIndex = this.sourceMarkers.length+""
     marker.on('dragend', () => {
-      this.selectedLocation = markerIndex
+      this.locationsWidget.selectedLocation = markerIndex
       this.updateMap()
     })
 
@@ -61,10 +55,14 @@ export class MapService {
       this.selectMarker(markerIndex)
     });
     this.sourceMarkers.push(marker)
-    this.updateLocationLabel()
+    this.updateLocationsWidget()
   }
 
-  selectMarker(markerIndex: number) {
+  updateLocationsWidget() {
+    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
+  }
+
+  selectMarker(markerIndex: string) {
     const features = document.getElementsByClassName('location')
     for(let i=0; features.length; i++) {
       const element: any = features[i] // Element type has dataset, as it was manually added. Adding any to silence error on next line, when accessing dataset in Element
@@ -74,8 +72,8 @@ export class MapService {
           element.classList.remove("selected-location")
       }
     };
-    this.selectedLocation = markerIndex
-    this.flyToMarker(this.sourceMarkers[this.selectedLocation])
+    this.locationsWidget.selectedLocation = markerIndex
+    this.flyToMarker(this.sourceMarkers[this.locationsWidget.selectedLocation])
   }
 
   flyToMarker(currentFeature: mapboxgl.Marker) {
@@ -87,89 +85,16 @@ export class MapService {
 
   updateMap() {
     //this.mapLoading.show()
-    this.updateLocationLabel()
+    this.updateLocationsWidget()
     //this.mapLoading.hide()
   }
 
 
-  async updateLocationLabel() {
-    var description = ""
-    const locations = this.getMarkersLocations()
-    const scoresResult = await this.quality.getScores(locations)
-    const orderedResult = Object.values(scoresResult).sort((a: LatLngIdScores, b: LatLngIdScores): number => a.scores.stats < b.scores.stats ? 0 : 1)
-    let orderedScores = orderedResult.map(k => k.scores.stats)
-    const maxScore = Math.max(...orderedScores)
-    
-    for(let i = 0; i < orderedResult.length; i++) {
-        let val = 0
-        let id = orderedResult[i].id
-        if(this.useAbsoluteScores) {
-            val = orderedScores[i]
-        } else {
-            val = (orderedScores[i])*100/maxScore
-        }
-        description += "<div class='location "
-        if(this.selectedLocation != undefined && this.selectedLocation == id) {
-            description += "selected-location "
-        }
-        description += "'data-marker-index="+id+" onclick='selectMarker(" + id + ")'><span>Marker " + (parseInt(id)+1) + "</span>"
-        
-        if(this.useAbsoluteScores) {
-            description += "<div class='absolute-rating'>" + val + "</div>"
-        } else {
-            description += "<div class='rating'>" + val + "</div>"
-        }
-         
-        description += "<br></div></div>"
-    }
-
-    document.getElementById("locations-content")!.innerHTML = description
-    this.updateRatingsCircles()
-  }
-
   getMarkersLocations(): LatLngId[] {
     let locations: LatLngId[] = []
     this.sourceMarkers.forEach((marker, index) => {
-        locations[index] = { ... marker.getLngLat(), id: index }
+        locations[index] = { ... marker.getLngLat(), id: index+1 }
     })
     return locations
   }
-
-
-  /*
-  Conic gradients are not supported in all browsers (https://caniuse.com/#feat=css-conic-gradients), so this pen includes the CSS conic-gradient() polyfill by Lea Verou (https://leaverou.github.io/conic-gradient/)
-  */
-  updateRatingsCircles() {
-    // Find al rating items
-    const ratings = document.querySelectorAll(".rating");
-
-    // Iterate over all rating items
-    ratings.forEach((rating) => {
-        // Get content and get score as an int
-        const ratingContent = rating.innerHTML;
-        const ratingScore = parseInt(ratingContent, 10);
-
-        // Define if the score is good, meh or bad according to its value
-        const scoreClass =
-            ratingScore < 40 ? "bad" : ratingScore < 60 ? "meh" : "good";
-
-        // Add score class to the rating
-        rating.classList.add(scoreClass);
-
-        // After adding the class, get its color
-        const ratingColor = window.getComputedStyle(rating).backgroundColor;
-
-        // Define the background gradient according to the score and color
-        const gradient = `background: conic-gradient(${ratingColor} ${ratingScore}%, transparent 0 100%)`;
-
-        // Set the gradient as the rating background
-        rating.setAttribute("style", gradient);
-
-        // Wrap the content in a tag to show it above the pseudo element that masks the bar
-        rating.innerHTML = `<span>${ratingScore}${
-            ratingContent.indexOf("%") >= 0 ? "%" : ""
-        }</span>`;
-    });
-  }
-
 }
