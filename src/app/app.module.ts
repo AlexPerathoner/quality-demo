@@ -18,7 +18,7 @@ import { SettingsViewComponent } from './settings-view/settings-view.component';
     SidebarComponent,
     WidgetComponent,
     SettingsBtnComponent,
-    SettingsViewComponent
+    SettingsViewComponent,
   ],
   imports: [
     BrowserModule,

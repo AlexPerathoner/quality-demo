@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core'
+import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
 import { environment } from "../environments/environment"
 import { LatLng, LatLngId, LatLngIdScores, TravelMode } from '@targomo/core'
-import { client, EDGE_WEIGHT, MAX_TRAVEL, TRAVEL_MODE } from './global'
+import { QualityRequest } from './quality-requests.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -14,8 +14,18 @@ export class MapService {
   zoom = 12
   sourceMarkers: mapboxgl.Marker[] = []
   selectedLocation: number | null = null
+  private _useAbsoluteScores = false
+  get useAbsoluteScores() { return this._useAbsoluteScores; }
+  set useAbsoluteScores(value) {
+    this._useAbsoluteScores = value
+    this.updateLocationLabel()
+  }
   
-  constructor() {
+  constructor(private quality: QualityRequest, @Optional() @SkipSelf() sharedService?: MapService) {
+    if(sharedService) {
+      throw new Error("Map Service already loaded!")
+    }
+    console.info("Map Service created")
   }
 
   buildMap() {
@@ -76,45 +86,16 @@ export class MapService {
   }
 
   updateMap() {
-    /*pBar.show()
-    updateLocationLabel()
-    pBar.hide()*/
+    //this.mapLoading.show()
+    this.updateLocationLabel()
+    //this.mapLoading.hide()
   }
 
-  async getScores(locations: LatLngId[]) {
-    // Counting the reachable population for each location
-    const results = await client.quality.fetch(locations, {
-      'stats': {
-        type: 'poiCoverageCount',
-        osmTypes: [
-            {
-                'key': 'shop',
-                'value': "supermarket"
-            }
-        ],
-        maxEdgeWeight: MAX_TRAVEL,
-        edgeWeight: EDGE_WEIGHT,
-        travelMode: {[TRAVEL_MODE]: {}} as TravelMode,
-        coreServiceUrl: 'https://api.targomo.com/britishisles/'
-      }
-    })
-    
-    return results.data
-  }
-
-  /** True for absolute, false for relative
-  */
-  scoringSystem = true //toggleScoringSystemBtn.innerHTML == "Absolute"
-  toggleScoringSystem() {
-      /*scoringSystem = !scoringSystem
-      document.getElementById('toggleScoringSystemBtn').innerHTML = scoringSystem ? "Absolute" : "Relative"
-      updateLocationLabel()*/
-  }
 
   async updateLocationLabel() {
     var description = ""
     const locations = this.getMarkersLocations()
-    const scoresResult = await this.getScores(locations)
+    const scoresResult = await this.quality.getScores(locations)
     const orderedResult = Object.values(scoresResult).sort((a: LatLngIdScores, b: LatLngIdScores): number => a.scores.stats < b.scores.stats ? 0 : 1)
     let orderedScores = orderedResult.map(k => k.scores.stats)
     const maxScore = Math.max(...orderedScores)
@@ -122,7 +103,7 @@ export class MapService {
     for(let i = 0; i < orderedResult.length; i++) {
         let val = 0
         let id = orderedResult[i].id
-        if(this.scoringSystem) {
+        if(this.useAbsoluteScores) {
             val = orderedScores[i]
         } else {
             val = (orderedScores[i])*100/maxScore
@@ -133,7 +114,7 @@ export class MapService {
         }
         description += "'data-marker-index="+id+" onclick='selectMarker(" + id + ")'><span>Marker " + (parseInt(id)+1) + "</span>"
         
-        if(this.scoringSystem) {
+        if(this.useAbsoluteScores) {
             description += "<div class='absolute-rating'>" + val + "</div>"
         } else {
             description += "<div class='rating'>" + val + "</div>"

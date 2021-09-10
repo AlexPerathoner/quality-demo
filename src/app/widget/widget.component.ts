@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MapService } from 'services/map.service';
 
 @Component({
   selector: 'app-widget',
@@ -19,10 +20,16 @@ export class WidgetComponent {
   @Input()
   options: {name: string, id: string}[] = []
 
+  constructor(private map: MapService) {}
+
   public toggle(event: MatSlideToggleChange) {
-    const sender = event.source.id
+    const senderId = event.source.id
     const val = event.checked
-    console.log(sender, val)
+    
+    if(senderId == "absoluteScoresBtn") {
+      this.map.useAbsoluteScores = val
+    }
+    
     
   }
 
