@@ -33,8 +33,7 @@
 
 .location {
 	border-radius: 8px;
-	padding-right: .5em;
-	padding-left: .5em;
+	padding: .5em;
 	margin-bottom: .5em;
 	height: 32px;
 }
@@ -61,7 +60,7 @@
   }
   
   /* Rating item */
-  .rating {
+.rating {
 	float:right;
 	position: relative;
 	display: flex;
@@ -69,15 +68,15 @@
 	justify-content: center;
 	border-radius: 100%;
 	overflow: hidden;
-	
+
 	color: var(--rating-color-default);
 	width: var(--rating-size);
 	height: var(--rating-size);
-  
+
 	/* Basic style for the text */
 	font-size: calc(var(--rating-size) / 3);
 	line-height: 1;
-  }
+}
   
   /* Rating circle content */
   .rating span {

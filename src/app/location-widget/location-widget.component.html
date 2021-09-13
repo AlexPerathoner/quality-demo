@@ -3,14 +3,14 @@
     <div class="option-container">
         <span class="option-label">Use absolute scores</span>
         <div class="slide-btn-container">
-            <mat-slide-toggle (change)='toggleScoringSystem($event)' id='absoluteScoresBtn' disableRipple=true></mat-slide-toggle>
+            <mat-slide-toggle (change)='onToggleScoringSystem($event)' id='absoluteScoresBtn' disableRipple=true></mat-slide-toggle>
         </div>
     </div>
     <div class="widget-content" id="locations-content">
         <div *ngFor="let location of locations;">
             <div class='location' [ngClass]="{'selected-location': location.id == selectedLocation}" (click)='selectMarker(location.id)'>
                 <span class="location-name">Marker {{ location.id }} </span>
-                <div *ngIf="!useAbsoluteScores" [ngStyle]="{'background': 'conic-gradient(' + (location.scores.stats < 40 ? '#e74c3c' : location.scores.stats < 60 ? '#f1c40f' : '#27ae60') + ' ' + location.scores.stats +'%, transparent 0 100%)'}" class="rating" [ngClass]="{'meh': location.scores.stats < 60 && location.scores.stats >= 40, 'bad': location.scores.stats < 40, 'good': location.scores.stats >= 60}">
+                <div *ngIf="!useAbsoluteScores && location.scores.stats != null" [ngStyle]="{'background': 'conic-gradient(' + (location.scores.stats < 40 ? '#e74c3c' : location.scores.stats < 60 ? '#f1c40f' : '#27ae60') + ' ' + location.scores.stats +'%, transparent 0 100%)'}" class="rating" [ngClass]="{'meh': location.scores.stats < 60 && location.scores.stats >= 40, 'bad': location.scores.stats < 40, 'good': location.scores.stats >= 60}">
                     <span>{{ location.scores.stats }}</span>
                 </div>
                 <div *ngIf="useAbsoluteScores" class="absolute-rating">

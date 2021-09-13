@@ -2,7 +2,8 @@ import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
 import { environment } from "../environments/environment"
 import { LatLng, LatLngId } from '@targomo/core'
-import { LocationWidgetComponent } from 'app/location-widget/location-widget.component'
+import { Subject } from 'rxjs'
+import { NamedMarker } from 'app/types/types'
 
 @Injectable({providedIn: 'root'})
 
@@ -12,8 +13,10 @@ export class MapService {
   lng = -0.0754
   lat = 51.51626
   zoom = 12
-  sourceMarkers: mapboxgl.Marker[] = []
-  locationsWidget: LocationWidgetComponent
+  sourceMarkers: NamedMarker[] = []
+
+  private markersUpdated = new Subject<LatLngId[]>()
+  private markerSelected = new Subject<String>()
   
   constructor(@Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
@@ -21,6 +24,14 @@ export class MapService {
     }
     console.info("Map Service created")
   }
+
+  getMarkerUpdateListener() {
+    return this.markersUpdated.asObservable();
+  }
+  getMarkerSelectListener() {
+    return this.markerSelected.asObservable();
+  }
+
 
   buildMap() {
     this.map = new mapboxgl.Map({
@@ -39,33 +50,41 @@ export class MapService {
   }
 
   addMarker(latLng: LatLng) {
-    const marker = new mapboxgl.Marker({
+    const marker = new NamedMarker({
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
-    const markerId = this.sourceMarkers.length+""
+    const markerId = this.sourceMarkers.length+1+""
+    marker.name = markerId
     marker.on('dragend', () => {
-      this.locationsWidget.selectedLocation = markerId
+      this.markerSelected.next(markerId)
       this.updateMap()
     })
+    marker.on('click', () => { // TODO CHECK IF WORKS
+      this.markerSelected.next(markerId)
+    })
 
-    marker.getElement().addEventListener('click', () => {
-      const id = (parseInt(markerId)+1)+""
-      this.locationsWidget.selectMarker(id)
-    });
     this.sourceMarkers.push(marker)
     this.updateMap()
   }
 
   updateMap() {
     //this.mapLoading.show()
-    this.locationsWidget.updateLocationsScores()
-    
+    this.markersUpdated.next(this.getMarkersLocations())
     //this.mapLoading.hide()
   }
 
-  flyToMarker(markerIndex: number) {
-    const currentFeature = this.sourceMarkers[markerIndex]
+  getMarker(id: string): NamedMarker | null {
+    for(let i=0; i<this.sourceMarkers.length; i++) {
+      if(id == this.sourceMarkers[i].name) {
+        return this.sourceMarkers[i]
+      }
+    }
+    return null
+  }
+
+  flyToMarker(markerId: string) {
+    const currentFeature = this.getMarker(markerId)
     this.map.flyTo({
       center: currentFeature.getLngLat(),
       zoom: 14
@@ -75,7 +94,7 @@ export class MapService {
   getMarkersLocations(): LatLngId[] {
     let locations: LatLngId[] = []
     this.sourceMarkers.forEach((marker, index) => {
-        locations[index] = { ... marker.getLngLat(), id: index+1 }
+        locations[index] = { ... marker.getLngLat(), id: marker.name}
     })
     return locations
   }
