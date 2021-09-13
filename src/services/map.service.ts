@@ -4,6 +4,7 @@ import { environment } from "../environments/environment"
 import { LatLng, LatLngId } from '@targomo/core'
 import { Subject } from 'rxjs'
 import { NamedMarker } from 'app/types/types'
+import { PopupService } from './popup.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -47,8 +48,25 @@ export class MapService {
     startLocations.forEach((elem) => {
       this.addMarker(elem)
     })
+    this.map.on('click', (e) => {
+      const locClickedPopup = new PopupService("", "", "Add Marker")
+        this.closeContextMenu()
+        new mapboxgl.Popup({offset: [20, 0]})
+            .setLngLat(e.lngLat)
+            .setDOMContent(locClickedPopup.makePopup())
+            .addTo(this.map);
+      document.getElementById('add-marker-btn').addEventListener('click', () => { this.addMarker(e.lngLat) })
+    })
   }
 
+  private closeContextMenu() {
+    const popUps = document.getElementsByClassName('mapboxgl-popup');
+    if (popUps[0]) popUps[0].remove();
+  }
+ 
+
+
+  
   addMarker(latLng: LatLng) {
     const marker = new NamedMarker({
       draggable: true

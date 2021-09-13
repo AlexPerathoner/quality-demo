@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { LocationWidgetComponent } from './location-widget/location-widget.component';
 import { LoadingLabelComponent } from './loading-label/loading-label.component';
+import { PopupService } from 'services/popup.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { LoadingLabelComponent } from './loading-label/loading-label.component';
     MatIconModule,
     MatProgressSpinnerModule,
   ],
-  providers: [],
+  providers: [PopupService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
