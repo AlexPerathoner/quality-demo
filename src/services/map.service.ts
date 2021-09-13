@@ -54,17 +54,14 @@ export class MapService {
       this.locationsWidget.selectMarker(id)
     });
     this.sourceMarkers.push(marker)
-    this.updateLocationsWidget()
+    this.updateMap()
   }
 
   updateMap() {
     //this.mapLoading.show()
-    this.updateLocationsWidget()
+    this.locationsWidget.updateLocationsScores()
+    
     //this.mapLoading.hide()
-  }
-
-  updateLocationsWidget() {
-    this.locationsWidget.updateLocationsScores(this.getMarkersLocations())
   }
 
   flyToMarker(markerIndex: number) {

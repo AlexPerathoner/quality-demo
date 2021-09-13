@@ -70,7 +70,6 @@
 	border-radius: 100%;
 	overflow: hidden;
 	
-	background: var(--rating-color-default);
 	color: var(--rating-color-default);
 	width: var(--rating-size);
 	height: var(--rating-size);
@@ -102,7 +101,6 @@
 	right: var(--bar-size);
 	bottom: var(--bar-size);
 	left: var(--bar-size);
-	background: var(--background-color);
 	border-radius: inherit;
 	z-index: 1;
   }
@@ -122,17 +120,14 @@
   
   /* Classes to give different colors to ratings, based on their score */
   .rating.good {
-	background: var(--rating-color-good);
 	color: var(--rating-color-good);
   }
   
   .rating.meh {
-	background: var(--rating-color-meh);
 	color: var(--rating-color-meh);
   }
   
   .rating.bad {
-	background: var(--rating-color-bad);
 	color: var(--rating-color-bad);
   }
   

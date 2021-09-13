@@ -23,8 +23,7 @@ export class LocationWidgetComponent implements OnInit {
   get useAbsoluteScores() { return this._useAbsoluteScores; }
   set useAbsoluteScores(value) {
     this._useAbsoluteScores = value
-    const sourceLocations = this.map.getMarkersLocations()
-    this.updateLocationsScores(sourceLocations)
+    this.updateLocationsScores()
   }
   
 
@@ -40,75 +39,30 @@ export class LocationWidgetComponent implements OnInit {
     
   }
 
-  async updateLocationsScores(sourceLocations: LatLngId[]) {
+  async updateLocationsScores() {
+
+    const sourceLocations = this.map.getMarkersLocations()
     const scoresResult = await this.quality.getScores(sourceLocations)
     const orderedResult = Object.values(scoresResult).sort((a: LatLngIdScores, b: LatLngIdScores): number => a.scores.stats > b.scores.stats ? 0 : 1)
     let orderedScores = orderedResult.map(k => k.scores.stats)
     const maxScore = Math.max(...orderedScores)
-
     
     for(let i = 0; i < orderedResult.length; i++) {
-      if(this.useAbsoluteScores) {
-        orderedResult[i].scores.stats = (orderedScores[i])*100/maxScore
+      if(!this.useAbsoluteScores) {
+        orderedResult[i].scores.stats = Math.round((orderedScores[i])*100/maxScore)
       }
     }
+    
     this.locations = orderedResult
-    this.updateRatingsCircles()
+    console.log(this.locations.map(elem => elem.scores.stats))
+    
   }
 
 
   public selectMarker(markerIndex: string) {
-    const features = document.getElementsByClassName('location')
-    for(let i=0; i<features.length; i++) {
-      const element: any = features[i] // Element type has dataset, as it was manually added. Adding any to silence error on next line, when accessing dataset in Element
-      if(element.dataset.markerIndex == markerIndex) { // checking for dataset. When the table gets ordered by the result the index of the cell and its marker index don't match anymore
-        element.classList.add("selected-location")
-      } else {
-        element.classList.remove("selected-location")
-      }
-    };
     this.selectedLocation = markerIndex
     this.map.flyToMarker(parseInt(markerIndex)-1)
-    if(!this.useAbsoluteScores) {
-      this.updateRatingsCircles()
-    }
+    
   }
 
-
-
-  /*
-  Conic gradients are not supported in all browsers (https://caniuse.com/#feat=css-conic-gradients), so this pen includes the CSS conic-gradient() polyfill by Lea Verou (https://leaverou.github.io/conic-gradient/)
-  */
-  updateRatingsCircles() {
-    // Find al rating items
-    const ratings = document.querySelectorAll(".rating");
-
-    // Iterate over all rating items
-    ratings.forEach((rating) => {
-        // Get content and get score as an int
-        const ratingContent = rating.innerHTML;
-        const ratingScore = parseInt(ratingContent, 10);
-
-        // Define if the score is good, meh or bad according to its value
-        const scoreClass =
-            ratingScore < 40 ? "bad" : ratingScore < 60 ? "meh" : "good";
-
-        // Add score class to the rating
-        rating.classList.add(scoreClass);
-
-        // After adding the class, get its color
-        const ratingColor = window.getComputedStyle(rating).backgroundColor;
-
-        // Define the background gradient according to the score and color
-        const gradient = `background: conic-gradient(${ratingColor} ${ratingScore}%, transparent 0 100%)`;
-
-        // Set the gradient as the rating background
-        rating.setAttribute("style", gradient);
-
-        // Wrap the content in a tag to show it above the pseudo element that masks the bar
-        rating.innerHTML = `<span>${ratingScore}${
-            ratingContent.indexOf("%") >= 0 ? "%" : ""
-        }</span>`;
-    });
-  }
 }
