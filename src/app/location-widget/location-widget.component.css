@@ -42,6 +42,11 @@
 	background-color: var(--lightgray);
 }
 
+#locations {
+	z-index: 1;
+	position: relative;
+}
+
 
 
 /* ----- Round rating element ----- */

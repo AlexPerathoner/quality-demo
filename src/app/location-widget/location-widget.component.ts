@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, Input, NgZone, OnInit, Optional, SkipSelf } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, Input, NgZone, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LatLngId, LatLngIdScores } from '@targomo/core';
 import { MapService } from 'services/map.service';
@@ -12,18 +12,22 @@ import { QualityRequest } from 'services/quality-requests.service';
   selector: 'app-location-widget',
   templateUrl: './location-widget.component.html',
   styleUrls: ['./location-widget.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationWidgetComponent implements OnInit {
   private selectedLocation: string | null = null
   locations: LatLngIdScores[] = []
   private useAbsoluteScores = false
+  isShowingLoadingLabel = false
+  
+  @ViewChild('loadingLabel') loadingLabel;
 
   constructor(private quality: QualityRequest, private map: MapService, private ref: ChangeDetectorRef) {
     ref.detach()
   }
 
   public async onToggleScoringSystem(event: MatSlideToggleChange) {
+    this.showLoadingLabel()
     this.useAbsoluteScores = event.checked
     
     this.locations.forEach((elem) => { // Immediately putting empty data
@@ -34,11 +38,21 @@ export class LocationWidgetComponent implements OnInit {
     this.updateLocations() // Asynchronously updating data
   }
 
+  private showLoadingLabel() {
+    this.isShowingLoadingLabel = true
+  }
+
+  private hideLoadingLabel() {
+    this.isShowingLoadingLabel = false
+  }
+
   ngOnInit(): void {
     this.updateLocations()
     this.map.getMarkerUpdateListener()
       .subscribe(async (newLocations: LatLngId[]) => {
+        this.showLoadingLabel()
         this.locations = await this.calculateLocationScores(newLocations)
+        this.hideLoadingLabel()
         this.ref.detectChanges()
       })
     this.map.getMarkerSelectListener()
@@ -49,6 +63,7 @@ export class LocationWidgetComponent implements OnInit {
 
   async updateLocations() {
     this.locations = await this.calculateLocationScores(this.map.getMarkersLocations())
+    this.hideLoadingLabel()
     this.ref.detectChanges()
   }
 
