@@ -1,8 +1,8 @@
 
 .standard-button {
-    border-radius: 8px;
+    border-radius: 0.5rem;
     width: 90px;
-    height: 30px;
+    height: 32px;
     font-family: "Roboto";
     font-weight: 600;
     font-size: small;
@@ -10,6 +10,8 @@
     float:right;
     color: white;
     border: none;
+    margin-right: 0;
+    margin-left: auto;
 }
 
 .popup-title {
@@ -23,8 +25,11 @@
 
 .popup-content {
     display: flex;
+    height: 32px;
+    width: 250px;
 }
 
 .mat-icon {
-    margin:auto
+    margin-top: auto;
+    margin-bottom: auto;
 }

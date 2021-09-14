@@ -53,25 +53,37 @@ export class MapService {
       this.addMarker(elem)
     })
     this.map.on('click', (e) => {
-      this.closeContextMenu()
-      let popupContent = this.dynamicComponentService.injectComponent(
-        PopupComponent,
-        x => x.model = new PopupModel("Title", "Add marker", () => {this.addMarker(e.lngLat)}));
-      
-      const offset: mapboxgl.PointLike = [50, 50]
-      this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
-        .setLngLat(e.lngLat) 
-        .setDOMContent(popupContent)
-        .addTo(this.map);
+      if(this.contextPopup) {
+        this.closeContextMenu()
+        changeCursorToGrab()
+      } else {
+        changeCursorToDefault()
+        let popupContent = this.dynamicComponentService.injectComponent(
+          PopupComponent,
+          x => x.model = new PopupModel("Title", "Add marker", () => {this.addMarker(e.lngLat)}));
+        
+        const offset: mapboxgl.PointLike = [150, 70]
+        this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
+          .setLngLat(e.lngLat) 
+          .setDOMContent(popupContent)
+          .addTo(this.map);
+      }
 
     })
+
+    function changeCursorToGrab() {
+      document.getElementsByTagName("canvas")[0].style.cursor = "grab";
+    }
+
+    function changeCursorToDefault() {
+      document.getElementsByTagName("canvas")[0].style.cursor = "default";
+    }
   }
 
+
   private closeContextMenu() {
-    if(this.contextPopup) {
-      this.contextPopup.remove()
-      this.contextPopup = null
-    }
+    this.contextPopup.remove()
+    this.contextPopup = null
   }
  
 
