@@ -4,7 +4,9 @@ import { environment } from "../environments/environment"
 import { LatLng, LatLngId } from '@targomo/core'
 import { Subject } from 'rxjs'
 import { NamedMarker } from 'app/types/types'
-import { PopupService } from './popup.service'
+import { DynamicComponentService } from './dynamic-component.service'
+import { PopupComponent } from 'app/popup/popup.component'
+import { PopupModel } from 'app/popup/popup.model'
 
 @Injectable({providedIn: 'root'})
 
@@ -15,11 +17,13 @@ export class MapService {
   lat = 51.51626
   zoom = 12
   sourceMarkers: NamedMarker[] = []
+  
+  private contextPopup: mapboxgl.Popup = null
 
   private markersUpdated = new Subject<LatLngId[]>()
   private markerSelected = new Subject<String>()
   
-  constructor(@Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(private dynamicComponentService: DynamicComponentService, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -49,19 +53,25 @@ export class MapService {
       this.addMarker(elem)
     })
     this.map.on('click', (e) => {
-      const locClickedPopup = new PopupService("", "", "Add Marker")
-        this.closeContextMenu()
-        new mapboxgl.Popup({offset: [20, 0]})
-            .setLngLat(e.lngLat)
-            .setDOMContent(locClickedPopup.makePopup())
-            .addTo(this.map);
-      document.getElementById('add-marker-btn').addEventListener('click', () => { this.addMarker(e.lngLat) })
+      this.closeContextMenu()
+      let popupContent = this.dynamicComponentService.injectComponent(
+        PopupComponent,
+        x => x.model = new PopupModel("Title", "Add marker", () => {this.addMarker(e.lngLat)}));
+      
+      const offset: mapboxgl.PointLike = [50, 50]
+      this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
+        .setLngLat(e.lngLat) 
+        .setDOMContent(popupContent)
+        .addTo(this.map);
+
     })
   }
 
   private closeContextMenu() {
-    const popUps = document.getElementsByClassName('mapboxgl-popup');
-    if (popUps[0]) popUps[0].remove();
+    if(this.contextPopup) {
+      this.contextPopup.remove()
+      this.contextPopup = null
+    }
   }
  
 

@@ -13,7 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { LocationWidgetComponent } from './location-widget/location-widget.component';
 import { LoadingLabelComponent } from './loading-label/loading-label.component';
-import { PopupService } from 'services/popup.service';
+import { DynamicComponentService } from 'services/dynamic-component.service';
+import { PopupComponent } from './popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { PopupService } from 'services/popup.service';
     SettingsViewComponent,
     LocationWidgetComponent,
     LoadingLabelComponent,
+    PopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,7 +35,7 @@ import { PopupService } from 'services/popup.service';
     MatIconModule,
     MatProgressSpinnerModule,
   ],
-  providers: [PopupService],
+  providers: [DynamicComponentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

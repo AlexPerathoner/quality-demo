@@ -187,21 +187,19 @@ line-height: 1;
 }
 
 
-
-.standard-button {
-  border-radius: 8px;
-  width: 90px;
-  height: 30px;
-  font-family: "Roboto";
-  font-weight: 600;
-  font-size: small;
-  background-color: var(--selected) !important;
-  float:right;
-  color: white;
-  border: none;
+::selection {
+  background: #e4e4e4; /* WebKit/Blink Browsers */
 }
 
-.standard-button:hover {
-	background-color: #ddd !important;
-	color: var(--selected);
+
+
+.mapboxgl-popup-tip {
+	display: none;
+}
+
+.mapboxgl-popup {
+	background: white;
+	border-radius: 0.5rem !important;
+	box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px 0 rgba(0,0,0,.14),0 1px 14px 0 rgba(0,0,0,.12);
+	font-size: small;
 }

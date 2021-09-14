@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, Input, NgZone, OnInit, Optional, SkipSelf, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LatLngId, LatLngIdScores } from '@targomo/core';
 import { MapService } from 'services/map.service';

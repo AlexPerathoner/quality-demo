@@ -1,0 +1,30 @@
+
+.standard-button {
+    border-radius: 8px;
+    width: 90px;
+    height: 30px;
+    font-family: "Roboto";
+    font-weight: 600;
+    font-size: small;
+    background-color: var(--selected) !important;
+    float:right;
+    color: white;
+    border: none;
+}
+
+.popup-title {
+    margin: 0.5em;
+    font-size: medium;
+}
+.standard-button:hover {
+    background-color: #ddd !important;
+    color: var(--selected);
+}
+
+.popup-content {
+    display: flex;
+}
+
+.mat-icon {
+    margin:auto
+}
