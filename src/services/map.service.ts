@@ -80,8 +80,10 @@ export class MapService {
 
 
   private closeContextMenu() {
-    this.contextPopup.remove()
-    this.contextPopup = null
+    if(this.contextPopup) {
+      this.contextPopup.remove()
+      this.contextPopup = null
+    }
   }
  
   private showTemporaryMarker(latLng: LatLng) {
@@ -94,7 +96,9 @@ export class MapService {
   }
 
   private hideTemporaryMarker() {
-    this.temporaryMarker.remove()
+    if(this.temporaryMarker) {
+      this.temporaryMarker.remove()
+    }
   }
   
   addMarker(latLng: LatLng) {
