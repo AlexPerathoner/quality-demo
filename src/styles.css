@@ -1,3 +1,6 @@
+
+/* TODO order please */
+
 :root {
   --lightgray: #efefef;
   --blue: steelblue;
@@ -24,9 +27,6 @@ button.mat-ripple {
   background-color: #e0e5e6;
 }
 
-
-
-
 .option-button {
   font-family: "Roboto";
   font-weight: 600;
@@ -44,6 +44,7 @@ button.mat-ripple {
 }
 
 
+/* Slide Button */
 
 .mat-slide-toggle-thumb {
   width: 16px !important;
@@ -191,7 +192,7 @@ line-height: 1;
   background: #e4e4e4; /* WebKit/Blink Browsers */
 }
 
-
+/* POPUP */
 
 .mapboxgl-popup-tip {
 	display: none;
@@ -208,4 +209,17 @@ line-height: 1;
 .mapboxgl-popup-content {
   padding: 1rem;
   height: 32px;
+}
+
+
+/* Marker */
+
+.dot {
+  height: 6px;
+  width: 6px;
+  background-color: #111;
+  border: 2px solid #dfdfdf;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
 }

@@ -17,6 +17,8 @@ export class MapService {
   lat = 51.51626
   zoom = 12
   sourceMarkers: NamedMarker[] = []
+
+  private temporaryMarker: mapboxgl.Marker = null
   
   private contextPopup: mapboxgl.Popup = null
 
@@ -54,13 +56,17 @@ export class MapService {
     })
     this.map.on('click', (e) => {
       if(this.contextPopup) {
+        this.hideTemporaryMarker()
         this.closeContextMenu()
-        changeCursorToGrab()
       } else {
-        changeCursorToDefault()
+        this.showTemporaryMarker(e.lngLat)
         let popupContent = this.dynamicComponentService.injectComponent(
           PopupComponent,
-          x => x.model = new PopupModel("Title", "Add marker", () => {this.addMarker(e.lngLat)}));
+          x => x.model = new PopupModel("Title", "Add marker", () => {
+            this.hideTemporaryMarker()
+            this.closeContextMenu()
+            this.addMarker(e.lngLat)
+          }));
         
         const offset: mapboxgl.PointLike = [150, 70]
         this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
@@ -70,14 +76,6 @@ export class MapService {
       }
 
     })
-
-    function changeCursorToGrab() {
-      document.getElementsByTagName("canvas")[0].style.cursor = "grab";
-    }
-
-    function changeCursorToDefault() {
-      document.getElementsByTagName("canvas")[0].style.cursor = "default";
-    }
   }
 
 
@@ -86,8 +84,18 @@ export class MapService {
     this.contextPopup = null
   }
  
+  private showTemporaryMarker(latLng: LatLng) {
+    const el = document.createElement('div');
+    el.className = 'dot';
+    this.temporaryMarker = new mapboxgl.Marker(el, {
+      draggable: false
+    })
+    this.temporaryMarker.setLngLat(latLng).addTo(this.map)
+  }
 
-
+  private hideTemporaryMarker() {
+    this.temporaryMarker.remove()
+  }
   
   addMarker(latLng: LatLng) {
     const marker = new NamedMarker({
@@ -124,6 +132,8 @@ export class MapService {
   }
 
   flyToMarker(markerId: string) {
+    this.hideTemporaryMarker()
+    this.closeContextMenu()
     const currentFeature = this.getMarker(markerId)
     this.map.flyTo({
       center: currentFeature.getLngLat(),
