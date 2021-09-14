@@ -223,3 +223,11 @@ line-height: 1;
   display: inline-block;
   cursor: pointer;
 }
+
+.mapboxgl-marker {
+  cursor: pointer;
+}
+
+canvas {
+  cursor: default;
+}
