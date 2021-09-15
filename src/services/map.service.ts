@@ -19,7 +19,7 @@ export class MapService {
   zoom = 12
   sourceMarkers: NamedMarker[] = []
 
-  private temporaryMarker: mapboxgl.Marker = null
+  private temporaryMarker: NamedMarker = null
   
   private contextPopup: mapboxgl.Popup = null
 
@@ -52,8 +52,9 @@ export class MapService {
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
     this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
     const startLocations = [{lng: -0.0754, lat: 51.51626}, {lng: -0.05, lat: 51.51}]
-    startLocations.forEach((elem) => {
-      this.addMarker(elem)
+    startLocations.forEach(async (lngLat) => {
+      let [title1, title2] = await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng})
+      this.addMarker(title1, lngLat)
     })
     this.map.on('click', (e) => {
       if(this.contextPopup) {
@@ -73,28 +74,29 @@ export class MapService {
   }
 
   private async showContextPopup(lngLat: mapboxgl.LngLat) {
-    this.showTemporaryMarker(lngLat)
     let [title1, title2] = await this.reverseGeocoding.getNameOfLocation(lngLat)
+    this.showTemporaryMarker(title1, lngLat)
     let popupContent = this.dynamicComponentService.injectComponent(
       PopupComponent,
       x => x.model = new PopupModel(title1, title2, "Add marker", () => {
         this.hideContextMenu()
-        this.addMarker(lngLat)
+        this.addMarker(title1, lngLat)
       }));
     
-    const offset: mapboxgl.PointLike = [150, 70]
+    const offset: mapboxgl.PointLike = [175, 75]
     this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
       .setLngLat(lngLat) 
       .setDOMContent(popupContent)
       .addTo(this.map);
   }
  
-  private showTemporaryMarker(latLng: LatLng) {
+  private showTemporaryMarker(name: string, latLng: LatLng) {
     const el = document.createElement('div');
     el.className = 'dot';
-    this.temporaryMarker = new mapboxgl.Marker(el, {
+    this.temporaryMarker = new NamedMarker(el, {
       draggable: false
     })
+    this.temporaryMarker.name = name
     this.temporaryMarker.setLngLat(latLng).addTo(this.map)
   }
 
@@ -104,12 +106,11 @@ export class MapService {
     }
   }
   
-  addMarker(latLng: LatLng) {
+  addMarker(markerId: string, latLng: LatLng) {
     const marker = new NamedMarker({
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
-    const markerId = this.sourceMarkers.length+1+""
     marker.name = markerId
     marker.on('dragend', () => {
       this.markerSelected.next(markerId)

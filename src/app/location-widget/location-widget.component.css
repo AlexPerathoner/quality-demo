@@ -14,13 +14,20 @@
 }
 
 .widget-content {
-    overflow-y: auto;
+    overflow-y: scroll;
     max-height: 300px;
 	font-weight: 600;
 }
 
+.widget-content-inner {
+	min-width: 250px;
+	display: inline-block;
+}
+
+
 .location-name {
 	line-height: 32px;
+	margin-right: 1rem;
 }
 
 .absolute-rating {
