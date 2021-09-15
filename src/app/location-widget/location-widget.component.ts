@@ -82,9 +82,9 @@ export class LocationWidgetComponent implements OnInit {
   }
 
 
-  public selectMarker(markerIndex: string) {
-    this.selectedLocation = markerIndex
-    this.map.flyToMarker(markerIndex)
+  public selectMarker(markerId: string) {
+    this.selectedLocation = markerId
+    this.map.selectMarker(markerId)
     this.ref.detectChanges()
   }
 

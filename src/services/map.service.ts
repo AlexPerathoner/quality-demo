@@ -53,15 +53,28 @@ export class MapService {
     this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
     const startLocations = [{lng: -0.0754, lat: 51.51626}, {lng: -0.05, lat: 51.51}]
     startLocations.forEach(async (lngLat) => {
-      let [title1, title2] = await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng})
+      let title1 = (await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng}))[0]
       this.addMarker(title1, lngLat)
     })
-    this.map.on('click', (e) => {
-      if(this.contextPopup) {
-        this.hideContextMenu()
+    this.map.on('click', (e) => {     
+      // Clicking on the map while a marker is selected will unselect the marker
+      // Clicking on the map while the context popup is shown will hide the popup
+      // Clicking on the map while no marker is selected or popup is shown will show the popup 
+      // Clicking on a marker will select the marker 
+      if(this.markerToSelect) {
+        this.selectMarker(this.markerToSelect)
+        this.markerToSelect = null
       } else {
-        this.showContextPopup(e.lngLat)
-      }
+        if(this.isMarkerSelected()) {
+          this.unselectMarker()
+        } else {
+          if(this.contextPopup) {
+            this.hideContextMenu()
+          } else {
+            this.showContextPopup(e.lngLat)
+          }
+        }
+      }    
     })
   }
 
@@ -89,10 +102,20 @@ export class MapService {
       .setDOMContent(popupContent)
       .addTo(this.map);
   }
- 
-  private showTemporaryMarker(name: string, latLng: LatLng) {
+
+  private createMarker() {
     const el = document.createElement('div');
-    el.className = 'dot';
+    el.className = 'marker-dot';
+    return el
+  }
+ 
+  private createTemporaryMarker() {
+    const el = document.createElement('div');
+    el.className = 'temporary-marker-dot';
+    return el
+  }
+  private showTemporaryMarker(name: string, latLng: LatLng) {
+    const el = this.createTemporaryMarker()
     this.temporaryMarker = new NamedMarker(el, {
       draggable: false
     })
@@ -107,16 +130,18 @@ export class MapService {
   }
   
   addMarker(markerId: string, latLng: LatLng) {
-    const marker = new NamedMarker({
+    const el = this.createMarker()
+    const marker = new NamedMarker(el, {
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
     marker.name = markerId
     marker.on('dragend', () => {
+      this.selectMarker(markerId)
       this.markerSelected.next(markerId)
-      this.updateMap()
     })
-    marker.on('click', () => { // TODO CHECK IF WORKS
+    marker.getElement().addEventListener('click', () => {
+      this.markerToSelect = markerId
       this.markerSelected.next(markerId)
     })
 
@@ -139,11 +164,29 @@ export class MapService {
     return null
   }
 
-  flyToMarker(markerId: string) {
+  private markerToSelect = null
+
+  selectMarker(markerId: string) {
+    const markerFeature: NamedMarker = this.getMarker(markerId)
+    this.unselectMarker()
+    markerFeature.getElement().id = "selected-marker" // Setting id to current marker
     this.hideContextMenu()
-    const currentFeature = this.getMarker(markerId)
+    this.updateMap()
+    this.flyTo(markerFeature)
+  }
+
+  isMarkerSelected() {
+    return (document.getElementById('selected-marker'))
+  }
+
+  unselectMarker() {
+    const oldSelectedMarker = this.isMarkerSelected() // Removing id from previous marker
+    if(oldSelectedMarker) {oldSelectedMarker.id = ""}
+  }
+
+  flyTo(feature: mapboxgl.Marker) {
     this.map.flyTo({
-      center: currentFeature.getLngLat(),
+      center: feature.getLngLat(),
       zoom: 14
     });
   }

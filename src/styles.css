@@ -214,18 +214,32 @@ line-height: 1;
 
 /* Marker */
 
-.dot {
-  height: 6px;
-  width: 6px;
-  background-color: #111;
+
+.mapboxgl-marker {
+  cursor: pointer;
+}
+
+.marker-dot, .temporary-marker-dot {
+  height: 10px;
+  width: 10px;
+  background-color: rgb(57, 176, 255);
   border: 2px solid #dfdfdf;
   border-radius: 50%;
   display: inline-block;
   cursor: pointer;
 }
+.marker-dot:hover, #selected-marker {
+  height: 15px;
+  width: 15px;
+  border: 3px solid #dfdfdf;
+}
 
-.mapboxgl-marker {
-  cursor: pointer;
+.temporary-marker-dot {
+  height: 6px;
+  width: 6px;
+  background-color: #111;
+  border: 2px solid #dfdfdf;
+  cursor: default;
 }
 
 canvas {
