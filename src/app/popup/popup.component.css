@@ -15,8 +15,11 @@
 }
 
 .popup-title {
-    margin: 0.5em;
-    font-size: medium;
+    margin-left: 0.5rem;
+    margin-right: 1rem;
+    font-size: small;
+    display: inline-grid;
+    font: 13px "Roboto"
 }
 .standard-button:hover {
     background-color: #ddd !important;
@@ -26,7 +29,7 @@
 .popup-content {
     display: flex;
     height: 32px;
-    width: 250px;
+    min-width: 300px;
 }
 
 .mat-icon {

@@ -7,6 +7,7 @@ import { NamedMarker } from 'app/types/types'
 import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
+import { LocationNamesService } from './location-names.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -25,7 +26,7 @@ export class MapService {
   private markersUpdated = new Subject<LatLngId[]>()
   private markerSelected = new Subject<String>()
   
-  constructor(private dynamicComponentService: DynamicComponentService, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -56,34 +57,36 @@ export class MapService {
     })
     this.map.on('click', (e) => {
       if(this.contextPopup) {
-        this.hideTemporaryMarker()
-        this.closeContextMenu()
+        this.hideContextMenu()
       } else {
-        this.showTemporaryMarker(e.lngLat)
-        let popupContent = this.dynamicComponentService.injectComponent(
-          PopupComponent,
-          x => x.model = new PopupModel("Title", "Add marker", () => {
-            this.hideTemporaryMarker()
-            this.closeContextMenu()
-            this.addMarker(e.lngLat)
-          }));
-        
-        const offset: mapboxgl.PointLike = [150, 70]
-        this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
-          .setLngLat(e.lngLat) 
-          .setDOMContent(popupContent)
-          .addTo(this.map);
+        this.showContextPopup(e.lngLat)
       }
-
     })
   }
 
-
-  private closeContextMenu() {
+  private hideContextMenu() {
+    this.hideTemporaryMarker()
     if(this.contextPopup) {
       this.contextPopup.remove()
       this.contextPopup = null
     }
+  }
+
+  private async showContextPopup(lngLat: mapboxgl.LngLat) {
+    this.showTemporaryMarker(lngLat)
+    let [title1, title2] = await this.reverseGeocoding.getNameOfLocation(lngLat)
+    let popupContent = this.dynamicComponentService.injectComponent(
+      PopupComponent,
+      x => x.model = new PopupModel(title1, title2, "Add marker", () => {
+        this.hideContextMenu()
+        this.addMarker(lngLat)
+      }));
+    
+    const offset: mapboxgl.PointLike = [150, 70]
+    this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
+      .setLngLat(lngLat) 
+      .setDOMContent(popupContent)
+      .addTo(this.map);
   }
  
   private showTemporaryMarker(latLng: LatLng) {
@@ -136,8 +139,7 @@ export class MapService {
   }
 
   flyToMarker(markerId: string) {
-    this.hideTemporaryMarker()
-    this.closeContextMenu()
+    this.hideContextMenu()
     const currentFeature = this.getMarker(markerId)
     this.map.flyTo({
       center: currentFeature.getLngLat(),
