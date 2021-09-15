@@ -87,8 +87,8 @@ export class MapService {
   }
 
   private async showContextPopup(lngLat: mapboxgl.LngLat) {
+    this.showTemporaryMarker("", lngLat)
     let [title1, title2] = await this.reverseGeocoding.getNameOfLocation(lngLat)
-    this.showTemporaryMarker(title1, lngLat)
     let popupContent = this.dynamicComponentService.injectComponent(
       PopupComponent,
       x => x.model = new PopupModel(title1, title2, "Add marker", () => {
