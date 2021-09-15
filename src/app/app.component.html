@@ -3,7 +3,10 @@
 	<app-location-widget></app-location-widget>
 </app-sidebar>
 <app-sidebar corner='top-right'>
-	<app-settings-btn (clicked)="showSettings()"></app-settings-btn>
+	<app-settings-btn (clicked)="settingsModalIsVisible = true"></app-settings-btn>
 	<app-reset-btn></app-reset-btn>
 </app-sidebar>
-<app-settings-view [isVisible]="settingsModalIsVisible" (closeClicked)="hideSettings()"></app-settings-view>
+<app-sidebar corner='bottom-right'>
+	<app-details-widget></app-details-widget>
+</app-sidebar>
+<app-settings-view [isVisible]="settingsModalIsVisible" (closeClicked)="settingsModalIsVisible = false"></app-settings-view>

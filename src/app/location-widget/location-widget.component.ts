@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Injectable, OnInit, Output, ViewChild } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LatLngId, LatLngIdScores } from '@targomo/core';
 import { MapService } from 'services/map.service';
@@ -19,6 +19,8 @@ export class LocationWidgetComponent implements OnInit {
   locations: LatLngIdScores[] = []
   useAbsoluteScores = false
   isShowingLoadingLabel = false
+
+  @Output() selectedMarker = new EventEmitter()
   
   @ViewChild('loadingLabel') loadingLabel;
   @ViewChild('relativeBtn') relativeBtn;
@@ -69,9 +71,9 @@ export class LocationWidgetComponent implements OnInit {
         this.hideLoadingLabel()
         this.ref.detectChanges()
       })
-    this.map.getMarkerSelectListener()
+    this.map.getMarkerSelectionListener()
       .subscribe((markerId: string) => {
-        this.selectMarker(markerId)
+        this.handleSelectionMarker(markerId)
       })
   }
 
@@ -96,10 +98,24 @@ export class LocationWidgetComponent implements OnInit {
   }
 
 
-  public selectMarker(markerId: string) {
-    this.selectedLocation = markerId
-    this.map.selectMarker(markerId)
+  handleSelectionMarker(markerId: string) {
+    if(markerId) {
+      this.selectMarker(markerId)
+    } else {
+      this.unselectMarker()
+    }
     this.ref.detectChanges()
+  }
+
+  unselectMarker() {
+    this.selectedLocation = null
+  }
+
+  selectMarker(markerId: string) {
+    this.selectedLocation = markerId
+    this.ref.detectChanges()
+    this.map.selectMarker(markerId)
+    this.selectedMarker.emit(markerId)
   }
 
 }

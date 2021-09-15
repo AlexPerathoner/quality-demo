@@ -33,7 +33,7 @@ export class MapService {
   getMarkerUpdateListener() {
     return this.markersUpdated.asObservable();
   }
-  getMarkerSelectListener() {
+  getMarkerSelectionListener() {
     return this.markerSelected.asObservable();
   }
 
@@ -67,9 +67,9 @@ export class MapService {
       zoom: 12,
       center: [-0.0754,51.51626]
     })
-    this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
+    this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left')
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
-    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
+    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }),"bottom-left")
     this.resetMarkers()
     this.map.on('click', (e) => {     
       // Clicking on the map while a marker is selected will unselect the marker
@@ -81,6 +81,7 @@ export class MapService {
         this.markerToSelect = null
       } else {
         if(this.isMarkerSelected()) {
+          this.markerSelected.next(null)
           this.unselectMarker()
         } else {
           if(this.contextPopup) {

@@ -1,5 +1,4 @@
-import { Component, ContentChildren, QueryList } from '@angular/core';
-import { WidgetComponent } from './widget/widget.component';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +8,4 @@ import { WidgetComponent } from './widget/widget.component';
 export class AppComponent {
   title = 'quality-demo';
   settingsModalIsVisible = false
-
-  showSettings() {
-    this.settingsModalIsVisible = true
-  }
-  hideSettings() {
-    this.settingsModalIsVisible = false
-  }
 }

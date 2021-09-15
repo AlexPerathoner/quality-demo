@@ -19,6 +19,7 @@ import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
 import { ResetBtnComponent } from './reset-btn/reset-btn.component';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { DetailsWidgetComponent } from './details-widget/details-widget.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
     PopupComponent,
     SettingsBtnComponent,
     ResetBtnComponent,
+    DetailsWidgetComponent,
   ],
   imports: [
     BrowserModule,
