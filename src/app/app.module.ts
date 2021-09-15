@@ -17,6 +17,8 @@ import { DynamicComponentService } from 'services/dynamic-component.service';
 import { PopupComponent } from './popup/popup.component';
 import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
 import { ResetBtnComponent } from './reset-btn/reset-btn.component';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { ResetBtnComponent } from './reset-btn/reset-btn.component';
     MatSlideToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   providers: [DynamicComponentService],
   bootstrap: [AppComponent]

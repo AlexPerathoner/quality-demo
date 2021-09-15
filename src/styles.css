@@ -31,21 +31,7 @@ button.mat-ripple {
   background-color: #e0e5e6;
 }
 
-.option-button {
-  font-family: "Roboto";
-  font-weight: 600;
-  font-size: small;
-  background-color: var(--selected) !important;
-  float:right;
-  color: white !important;
-  border: 0px;
-}
 
-.option-button:hover {
-  background-color: #ddd !important;
-  color: var(--selected) !important;
-  cursor: pointer;
-}
 
 
 /* Slide Button */
@@ -248,4 +234,20 @@ line-height: 1;
 
 canvas {
   cursor: default;
+}
+
+.option-button {
+  font-family: "Roboto";
+  font-weight: 600;
+  font-size: small;
+  background-color: var(--selected);
+  float:right;
+  color: white;
+  border: 0px;
+}
+
+.option-button:hover {
+  background-color: #ddd !important;
+  color: var(--selected) !important;
+  cursor: pointer;
 }

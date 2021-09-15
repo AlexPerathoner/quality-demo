@@ -168,9 +168,9 @@ body {
 	font-family: "Roboto";
 	font-weight: 600;
 	font-size: small;
-	background-color: var(--selected);
+	background-color: white;
 	float:right;
-	color: white;
+	color: var(--selected);;
 }
 
 .option-button:hover {

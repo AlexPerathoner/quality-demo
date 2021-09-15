@@ -17,18 +17,32 @@ import { QualityRequest } from 'services/quality-requests.service';
 export class LocationWidgetComponent implements OnInit {
   private selectedLocation: string | null = null
   locations: LatLngIdScores[] = []
-  private useAbsoluteScores = false
+  useAbsoluteScores = false
   isShowingLoadingLabel = false
   
   @ViewChild('loadingLabel') loadingLabel;
+  @ViewChild('relativeBtn') relativeBtn;
+  @ViewChild('absoluteBtn') absoluteBtn;
 
   constructor(private quality: QualityRequest, private map: MapService, private ref: ChangeDetectorRef) {
     ref.detach()
   }
 
-  public async onToggleScoringSystem(event: MatSlideToggleChange) {
+  showRelativeScores() {
+    this.useAbsoluteScores = false
+    this.relativeBtn.nativeElement.classList.add('selected-button')
+    this.absoluteBtn.nativeElement.classList.remove('selected-button')
+    this.toggleScoringSystem()
+  }
+  showAbsoluteScores() {
+    this.useAbsoluteScores = true
+    this.absoluteBtn.nativeElement.classList.add('selected-button')
+    this.relativeBtn.nativeElement.classList.remove('selected-button')
+    this.toggleScoringSystem()
+  }
+
+  public async toggleScoringSystem() {
     this.showLoadingLabel()
-    this.useAbsoluteScores = event.checked
     
     this.locations.forEach((elem) => { // Immediately putting empty data
       elem.scores.stats = null

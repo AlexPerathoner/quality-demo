@@ -1,10 +1,11 @@
 <app-widget id="locations" title="Location Scoring API:">
+
+    <span option-label>Show: </span>
     <div class="option-container">
-        <span class="option-label">Use absolute scores</span>
-        <div class="slide-btn-container">
-            <mat-slide-toggle (change)='onToggleScoringSystem($event)' id='absoluteScoresBtn' disableRipple=true></mat-slide-toggle>
-        </div>
+        <button #absoluteBtn (click)='showAbsoluteScores()' class="standard-button option-button" style="margin-left: .5rem;">Absolute scores</button>
+        <button #relativeBtn (click)='showRelativeScores()' class="standard-button option-button selected-button">Network benchmark</button>
     </div>
+    
     <div class="widget-content">
         <div class="widget-content-inner">
             <div *ngFor="let location of locations;">
