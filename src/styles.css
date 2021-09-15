@@ -1,6 +1,10 @@
 
 /* TODO order please */
 
+.mapboxgl-canvas {
+  width: 100% !important;
+}
+
 :root {
   --lightgray: #efefef;
   --blue: steelblue;
