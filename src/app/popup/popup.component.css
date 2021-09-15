@@ -24,6 +24,7 @@
 .standard-button:hover {
     background-color: #ddd !important;
     color: var(--selected);
+    cursor: pointer;
 }
 
 .popup-content {
