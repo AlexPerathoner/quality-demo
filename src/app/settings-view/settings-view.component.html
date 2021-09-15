@@ -1,9 +1,9 @@
 
-<div class="modal" id="modal-settings">
+<div class="modal" id="modal-settings" [ngClass]="{'is-visible': isVisible}">
     <div class="modal-dialog">
         <header class="modal-header">
             Settings
-            <button class="close-modal" aria-label="close modal" data-close>✕</button>
+            <button class="close-modal" aria-label="close modal" (click)="onClose()">✕</button>
         </header>
 
 

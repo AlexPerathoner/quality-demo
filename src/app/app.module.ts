@@ -8,13 +8,14 @@ import { WidgetComponent } from './widget/widget.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
+import { BtnComponent } from './btn/btn.component';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsViewComponent } from './settings-view/settings-view.component';
 import { LocationWidgetComponent } from './location-widget/location-widget.component';
 import { LoadingLabelComponent } from './loading-label/loading-label.component';
 import { DynamicComponentService } from 'services/dynamic-component.service';
 import { PopupComponent } from './popup/popup.component';
+import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
 
 @NgModule({
   declarations: [
@@ -22,11 +23,12 @@ import { PopupComponent } from './popup/popup.component';
     MapComponent,
     SidebarComponent,
     WidgetComponent,
-    SettingsBtnComponent,
+    BtnComponent,
     SettingsViewComponent,
     LocationWidgetComponent,
     LoadingLabelComponent,
     PopupComponent,
+    SettingsBtnComponent,
   ],
   imports: [
     BrowserModule,

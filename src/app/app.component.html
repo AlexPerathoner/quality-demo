@@ -3,6 +3,6 @@
 	<app-location-widget></app-location-widget>
 </app-sidebar>
 <app-sidebar corner='top-right'>
-	<app-settings-btn></app-settings-btn>
+	<app-settings-btn (clicked)="showSettings()"></app-settings-btn>
 </app-sidebar>
-<app-settings-view></app-settings-view>
+<app-settings-view [isVisible]="settingsModalIsVisible" (closeClicked)="hideSettings()"></app-settings-view>

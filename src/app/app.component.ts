@@ -8,11 +8,12 @@ import { WidgetComponent } from './widget/widget.component';
 })
 export class AppComponent {
   title = 'quality-demo';
+  settingsModalIsVisible = false
 
-
-  @ContentChildren(WidgetComponent) widgets!: QueryList<WidgetComponent>;
-
-  get serializedWidgets(): string {
-    return this.widgets ? this.widgets.map(p => p.id).join(', ') : '';
+  showSettings() {
+    this.settingsModalIsVisible = true
+  }
+  hideSettings() {
+    this.settingsModalIsVisible = false
   }
 }
