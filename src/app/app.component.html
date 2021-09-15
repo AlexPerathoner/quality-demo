@@ -4,5 +4,6 @@
 </app-sidebar>
 <app-sidebar corner='top-right'>
 	<app-settings-btn (clicked)="showSettings()"></app-settings-btn>
+	<app-reset-btn></app-reset-btn>
 </app-sidebar>
 <app-settings-view [isVisible]="settingsModalIsVisible" (closeClicked)="hideSettings()"></app-settings-view>

@@ -16,6 +16,7 @@ import { LoadingLabelComponent } from './loading-label/loading-label.component';
 import { DynamicComponentService } from 'services/dynamic-component.service';
 import { PopupComponent } from './popup/popup.component';
 import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
+import { ResetBtnComponent } from './reset-btn/reset-btn.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SettingsBtnComponent } from './settings-btn/settings-btn.component';
     LoadingLabelComponent,
     PopupComponent,
     SettingsBtnComponent,
+    ResetBtnComponent,
   ],
   imports: [
     BrowserModule,

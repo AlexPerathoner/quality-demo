@@ -7,7 +7,6 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class SettingsBtnComponent {
   @Output() clicked = new EventEmitter()
-  constructor() { }
 
   showSettings() {
     this.clicked.emit("")

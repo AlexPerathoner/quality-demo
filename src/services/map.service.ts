@@ -14,9 +14,6 @@ import { LocationNamesService } from './location-names.service'
 export class MapService {
   map!: mapboxgl.Map
   style = `https://api.maptiler.com/maps/positron/style.json?key=${environment.MapBox_API_KEY}`
-  lng = -0.0754
-  lat = 51.51626
-  zoom = 12
   sourceMarkers: NamedMarker[] = []
 
   private temporaryMarker: NamedMarker = null
@@ -40,22 +37,40 @@ export class MapService {
     return this.markerSelected.asObservable();
   }
 
+  reset() {
+    // Reset position
+    this.map.setCenter([-0.0754,51.51626])
+    // Reset zoom
+    this.map.setZoom(12)
 
-  buildMap() {
-    this.map = new mapboxgl.Map({
-      container: 'map',
-      style: this.style,
-      zoom: this.zoom,
-      center: [this.lng, this.lat]
-    })
-    this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
-    const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
-    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
+    this.resetMarkers()
+  }
+
+  resetMarkers() {
+    for(let i=0; i<this.sourceMarkers.length; i++) {
+      this.sourceMarkers[i].remove()
+      this.sourceMarkers[i] = null
+    }
+    this.sourceMarkers = []
+
     const startLocations = [{lng: -0.0754, lat: 51.51626}, {lng: -0.05, lat: 51.51}]
     startLocations.forEach(async (lngLat) => {
       let title1 = (await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng}))[0]
       this.addMarker(title1, lngLat)
     })
+  }
+  
+  buildMap() {
+    this.map = new mapboxgl.Map({
+      container: 'map',
+      style: this.style,
+      zoom: 12,
+      center: [-0.0754,51.51626]
+    })
+    this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
+    const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
+    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }))
+    this.resetMarkers()
     this.map.on('click', (e) => {     
       // Clicking on the map while a marker is selected will unselect the marker
       // Clicking on the map while the context popup is shown will hide the popup
