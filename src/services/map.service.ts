@@ -1,7 +1,7 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
 import { environment } from "../environments/environment"
-import { LatLng } from '@targomo/core'
+import { LatLng, LatLngId } from '@targomo/core'
 import { Subject } from 'rxjs'
 import { NamedLatLngId, NamedMarker } from 'app/types/types'
 import { DynamicComponentService } from './dynamic-component.service'
@@ -39,31 +39,32 @@ export class MapService {
 
   reset() {
     // Reset position
-    this.map.setCenter([-0.0754,51.51626])
+    this.map.setCenter([-0.025,51.51626])
     // Reset zoom
     this.map.setZoom(12)
 
     this.resetMarkers()
   }
 
-  resetMarkers() {
+  async resetMarkers() {
     for(let i=0; i<this.sourceMarkers.length; i++) {
       this.sourceMarkers[i].remove()
       this.sourceMarkers[i] = null
     }
     this.sourceMarkers = []
 
-    const startLocations = [
-      {lng: -0.075, lat: 51.51},
-      {lng: -0.05, lat: 51.51},
-      {lng: -0.025, lat: 51.51},
-      {lng: 0, lat: 51.51},
-      {lng: 0.025, lat: 51.51}
+    const startLocations: LatLngId[] = [
+      {lng: -0.075, lat: 51.51, id: 1},
+      {lng: -0.05, lat: 51.51, id: 2},
+      {lng: -0.025, lat: 51.51, id: 3},
+      {lng: 0, lat: 51.51, id: 4},
+      {lng: 0.025, lat: 51.51, id: 5}
     ]
-    startLocations.forEach(async (lngLat) => {
-      let title1 = (await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng}))[0]
-      this.addMarker(title1, lngLat)
-    })
+    const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
+      return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
+    }))
+    namedStartLocations.forEach(loc => this.silentlyAddMarker(loc.id, loc.name, {lat: loc.lat, lng: loc.lng}))
+    this.markersUpdated.next(namedStartLocations)
   }
   
   buildMap() {
@@ -149,9 +150,8 @@ export class MapService {
       this.temporaryMarker.remove()
     }
   }
-  
-  addMarker(markerName: string, latLng: LatLng) {
-    const markerId = this.sourceMarkers.length + 1
+
+  private silentlyAddMarker(markerId: number, markerName: string, latLng: LatLng) {
     const el = this.createMarker()
     const marker = new NamedMarker(el, {
       draggable: true
@@ -169,6 +169,11 @@ export class MapService {
     })
 
     this.sourceMarkers.push(marker)
+  }
+  
+  addMarker(markerName: string, latLng: LatLng) {
+    const markerId = this.sourceMarkers.length + 1
+    this.silentlyAddMarker(markerId, markerName, latLng)
     this.updateMap()
   }
 
