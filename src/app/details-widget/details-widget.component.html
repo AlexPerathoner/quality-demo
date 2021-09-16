@@ -1,4 +1,5 @@
 <app-widget id="details" title="Details" *ngIf="location">
+    <mat-icon role="img" class="mat-icon notranslate material-icons-round" id="delete-icon" aria-hidden="true" data-mat-icon-type="font" (click)="deleteMarker()">delete</mat-icon>
     <span class="id">Marker {{location.id}}</span><br>
     <span class="title">{{location.name}}</span>
 </app-widget>

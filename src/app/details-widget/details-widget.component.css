@@ -2,3 +2,12 @@
     margin-top: 1rem;
     font-weight: bold;
 }
+
+#delete-icon {
+	color: red;
+	cursor: pointer;
+	float: right;
+	position: relative;
+	bottom: 40px;
+    left: 7px
+}

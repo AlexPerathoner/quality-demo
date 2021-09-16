@@ -46,6 +46,15 @@ export class MapService {
     this.resetMarkers()
   }
 
+  removeMarker(markerId: number) {
+    const markerToDelete = this.sourceMarkers.find(marker => marker.id == markerId)
+    markerToDelete.remove()
+    const index = this.sourceMarkers.indexOf(markerToDelete)    
+    this.sourceMarkers.splice(index, 1)
+    this.markersUpdated.next(this.getMarkersLocations())
+    this.markerSelected.next()
+  }
+
   async resetMarkers() {
     for(let i=0; i<this.sourceMarkers.length; i++) {
       this.sourceMarkers[i].remove()
@@ -63,7 +72,7 @@ export class MapService {
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
       return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
     }))
-    namedStartLocations.forEach(loc => this.silentlyAddMarker(loc.id, loc.name, {lat: loc.lat, lng: loc.lng}))
+    namedStartLocations.forEach(loc => this.silentlyAddMarker(loc.name, {lat: loc.lat, lng: loc.lng}))
     this.markersUpdated.next(namedStartLocations)
   }
   
@@ -151,7 +160,9 @@ export class MapService {
     }
   }
 
-  private silentlyAddMarker(markerId: number, markerName: string, latLng: LatLng) {
+  private markerCount = 0
+  private silentlyAddMarker(markerName: string, latLng: LatLng) {
+    const markerId = this.markerCount++ +1
     const el = this.createMarker()
     const marker = new NamedMarker(el, {
       draggable: true
@@ -172,9 +183,9 @@ export class MapService {
   }
   
   addMarker(markerName: string, latLng: LatLng) {
-    const markerId = this.sourceMarkers.length + 1
-    this.silentlyAddMarker(markerId, markerName, latLng)
+    this.silentlyAddMarker(markerName, latLng)
     this.updateMap()
+    
   }
 
   updateMap() {
