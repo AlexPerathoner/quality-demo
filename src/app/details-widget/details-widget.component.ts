@@ -8,15 +8,17 @@ import { MapService } from 'services/map.service';
 })
 export class DetailsWidgetComponent implements OnInit {
   title = ""
+  id = 0
   isVisible = false
 
   constructor(private map: MapService) { }
 
   ngOnInit(): void {
     this.map.getMarkerSelectionListener()
-      .subscribe((markerId: string) => {
-        if(markerId) {
-          this.title = markerId
+      .subscribe((marker) => {
+        if(marker) {
+          this.title = marker.name
+          this.id = marker.id
           this.isVisible = true
         } else {
           this.isVisible = false

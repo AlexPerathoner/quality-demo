@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Injectable, OnInit, Output, ViewChild } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { LatLngId, LatLngIdScores } from '@targomo/core';
+import { NamedLatLngId, NamedLatLngIdScores, NamedMarker } from 'app/types/types';
 import { MapService } from 'services/map.service';
 import { QualityRequest } from 'services/quality-requests.service';
 
@@ -15,8 +15,8 @@ import { QualityRequest } from 'services/quality-requests.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationWidgetComponent implements OnInit {
-  private selectedLocation: string | null = null
-  locations: LatLngIdScores[] = []
+  private selectedLocation: number | null = null
+  locations: NamedLatLngIdScores[] = []
   useAbsoluteScores = false
   isShowingLoadingLabel = false
 
@@ -65,15 +65,15 @@ export class LocationWidgetComponent implements OnInit {
   ngOnInit(): void {
     this.updateLocations()
     this.map.getMarkerUpdateListener()
-      .subscribe(async (newLocations: LatLngId[]) => {
+      .subscribe(async (newLocations) => {
         this.showLoadingLabel()
         this.locations = await this.calculateLocationScores(newLocations)
         this.hideLoadingLabel()
         this.ref.detectChanges()
       })
     this.map.getMarkerSelectionListener()
-      .subscribe((markerId: string) => {
-        this.handleSelectionMarker(markerId)
+      .subscribe((marker) => {
+        this.handleSelectionMarker(marker)
       })
   }
 
@@ -83,9 +83,14 @@ export class LocationWidgetComponent implements OnInit {
     this.ref.detectChanges()
   }
 
-  async calculateLocationScores(sourceLocations: LatLngId[]): Promise<LatLngIdScores[]> {
-    const scoresResult = await this.quality.getScores(sourceLocations)
-    const orderedResult = Object.values(scoresResult).sort((a: LatLngIdScores, b: LatLngIdScores): number => a.scores.stats > b.scores.stats ? 0 : 1)
+  async calculateLocationScores(sourceLocations: NamedLatLngId[]): Promise<NamedLatLngIdScores[]> {
+    const scoresResult = Object.values(await this.quality.getScores(sourceLocations))
+    let namedResult: NamedLatLngIdScores[] = scoresResult.map(elem => {
+      let name = sourceLocations.find(loc => loc.id == elem.id).name
+      return {...elem, name: name}
+    }) 
+
+    const orderedResult = namedResult.sort((a: NamedLatLngIdScores, b: NamedLatLngIdScores): number => a.scores.stats > b.scores.stats ? 0 : 1)
     let orderedScores = orderedResult.map(k => k.scores.stats)
     const maxScore = Math.max(...orderedScores)
     
@@ -98,9 +103,9 @@ export class LocationWidgetComponent implements OnInit {
   }
 
 
-  handleSelectionMarker(markerId: string) {
-    if(markerId) {
-      this.selectMarker(markerId)
+  handleSelectionMarker(marker: NamedMarker) {
+    if(marker) {
+      this.selectMarker(marker.id)
     } else {
       this.unselectMarker()
     }
@@ -111,10 +116,14 @@ export class LocationWidgetComponent implements OnInit {
     this.selectedLocation = null
   }
 
-  selectMarker(markerId: string) {
+  onLocationClicked(markerId: number) {
+    this.map.selectMarker(markerId)
+    this.selectMarker(markerId)
+  }
+
+  selectMarker(markerId: number) {
     this.selectedLocation = markerId
     this.ref.detectChanges()
-    this.map.selectMarker(markerId)
     this.selectedMarker.emit(markerId)
   }
 

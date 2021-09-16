@@ -1,9 +1,9 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
 import { environment } from "../environments/environment"
-import { LatLng, LatLngId } from '@targomo/core'
+import { LatLng } from '@targomo/core'
 import { Subject } from 'rxjs'
-import { NamedMarker } from 'app/types/types'
+import { NamedLatLngId, NamedMarker } from 'app/types/types'
 import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
@@ -16,12 +16,12 @@ export class MapService {
   style = `https://api.maptiler.com/maps/positron/style.json?key=${environment.MapBox_API_KEY}`
   sourceMarkers: NamedMarker[] = []
 
-  private temporaryMarker: NamedMarker = null
+  private temporaryMarker: mapboxgl.Marker = null
   
   private contextPopup: mapboxgl.Popup = null
 
-  private markersUpdated = new Subject<LatLngId[]>()
-  private markerSelected = new Subject<String>()
+  private markersUpdated = new Subject<NamedLatLngId[]>()
+  private markerSelected = new Subject<NamedMarker>()
   
   constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
@@ -131,34 +131,35 @@ export class MapService {
     return el
   }
   private showTemporaryMarker(name: string, latLng: LatLng) {
+    this.hideTemporaryMarker()
     const el = this.createTemporaryMarker()
-    this.temporaryMarker = new NamedMarker(el, {
+    this.temporaryMarker = new mapboxgl.Marker(el, {
       draggable: false
     })
-    this.temporaryMarker.name = name
     this.temporaryMarker.setLngLat(latLng).addTo(this.map)
   }
-
   private hideTemporaryMarker() {
     if(this.temporaryMarker) {
       this.temporaryMarker.remove()
     }
   }
   
-  addMarker(markerId: string, latLng: LatLng) {
+  addMarker(markerName: string, latLng: LatLng) {
+    const markerId = this.sourceMarkers.length + 1
     const el = this.createMarker()
     const marker = new NamedMarker(el, {
       draggable: true
     })
     marker.setLngLat(latLng).addTo(this.map)
-    marker.name = markerId
+    marker.name = markerName
+    marker.id = markerId
     marker.on('dragend', () => {
       this.selectMarker(markerId)
-      this.markerSelected.next(markerId)
+      this.markerSelected.next(marker)
     })
     marker.getElement().addEventListener('click', () => {
       this.markerToSelect = markerId
-      this.markerSelected.next(markerId)
+      this.markerSelected.next(marker)
     })
 
     this.sourceMarkers.push(marker)
@@ -171,19 +172,20 @@ export class MapService {
     //this.mapLoading.hide()
   }
 
-  getMarker(id: string): NamedMarker | null {
+  getMarker(id: number): NamedMarker | null {
     for(let i=0; i<this.sourceMarkers.length; i++) {
-      if(id == this.sourceMarkers[i].name) {
+      if(id == this.sourceMarkers[i].id) {
         return this.sourceMarkers[i]
       }
     }
     return null
   }
 
-  private markerToSelect = null
+  private markerToSelect: number = null
 
-  selectMarker(markerId: string) {
+  selectMarker(markerId: number) {
     const markerFeature: NamedMarker = this.getMarker(markerId)
+    this.markerSelected.next(markerFeature)
     this.unselectMarker()
     markerFeature.getElement().id = "selected-marker" // Setting id to current marker
     this.hideContextMenu()
@@ -207,10 +209,10 @@ export class MapService {
     });
   }
 
-  getMarkersLocations(): LatLngId[] {
-    let locations: LatLngId[] = []
+  getMarkersLocations(): NamedLatLngId[] {
+    let locations: NamedLatLngId[] = []
     this.sourceMarkers.forEach((marker, index) => {
-        locations[index] = { ... marker.getLngLat(), id: marker.name}
+        locations[index] = { ... marker.getLngLat(), id: marker.id, name: marker.name}
     })
     return locations
   }

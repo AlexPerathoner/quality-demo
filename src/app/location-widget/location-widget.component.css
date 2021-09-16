@@ -26,18 +26,25 @@
 	display: inline-block;
 }
 
+.location-info {
+	display: inline-block;
+}
+.location-id {
+	font-weight: normal;
+}
 
-.location-name {
-	line-height: 32px;
-	margin-right: 1rem;
+.location-name, .location-id {
+	line-height: 1rem;
+	display: block;
 }
 
 .absolute-rating {
-	line-height: 32px;
+	line-height: 1rem;
 	color: var(--selected);
 	text-align: right;
 	float: right;
 	font-weight: 800;
+	margin-top: .5rem;
 }
 
 .location {
