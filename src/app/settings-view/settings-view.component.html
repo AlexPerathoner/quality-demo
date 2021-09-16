@@ -11,7 +11,7 @@
         <div class="ng-star-inserted tgm-traveltype-select">
             <div class="loop-overlay-individual-select ng-star-inserted">
             <div class="tgm-simple-button active">
-                <button matripple="" class="mat-ripple travel-mode-btn selected-button" (click)="changeTravelMode(this, 'walk')">
+                <button matripple="" class="mat-ripple travel-mode-btn selected-button" id="walk" (click)="changeTravelMode('walk')">
                     <div class="button-inner">
                         <mat-icon role="img" class="mat-icon notranslate material-icons-round mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">directions_walk</mat-icon>
                     </div>
@@ -19,7 +19,7 @@
                 <div class="label ng-star-inserted"><span tgm-label="">Walk</span></div>
             </div>
             <div class="tgm-simple-button ng-star-inserted">
-                <button matripple="" class="mat-ripple travel-mode-btn" (click)="changeTravelMode(this, 'bike')">
+                <button matripple="" class="mat-ripple travel-mode-btn" id="bike" (click)="changeTravelMode('bike')">
                     <div class="button-inner">
                         <mat-icon role="img" class="mat-icon notranslate material-icons-round mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">directions_bike</mat-icon>
                     </div>
@@ -27,7 +27,7 @@
                 <div class="label ng-star-inserted"><span tgm-label="">Bike</span></div>
             </div>
             <div class="tgm-simple-button ng-star-inserted">
-                <button matripple="" class="mat-ripple travel-mode-btn" (click)="changeTravelMode(this, 'transit')">
+                <button matripple="" class="mat-ripple travel-mode-btn" id="transit" (click)="changeTravelMode('transit')">
                     <div class="button-inner">
                         <mat-icon role="img" class="mat-icon notranslate material-icons-round mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">tram</mat-icon>
                     </div>
@@ -35,7 +35,7 @@
                 <div class="label ng-star-inserted"><span tgm-label="">Transit</span></div>
             </div>
             <div class="tgm-simple-button ng-star-inserted">
-                <button matripple="" class="mat-ripple travel-mode-btn" (click)="changeTravelMode(this, 'car')">
+                <button matripple="" class="mat-ripple travel-mode-btn" id="car" (click)="changeTravelMode('car')">
                     <div class="button-inner">
                         <mat-icon role="img" class="mat-icon notranslate material-icons-round mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">directions_car</mat-icon>
                     </div>
