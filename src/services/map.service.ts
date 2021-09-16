@@ -204,10 +204,15 @@ export class MapService {
   }
 
   flyTo(feature: mapboxgl.Marker) {
+    let selectionZoom = 14
+    if(this.map.getZoom() > selectionZoom) {
+      selectionZoom = this.map.getZoom()
+    }
     this.map.flyTo({
       center: feature.getLngLat(),
-      zoom: 14
+      zoom: selectionZoom
     });
+    
   }
 
   getMarkersLocations(): NamedLatLngId[] {
