@@ -84,10 +84,10 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   private nameScoredResults(namedLocation: NamedLatLngId[], scoredResults: LatLngIdScores[]): NamedLatLngIdScores[] {
-    return [...scoredResults.map(elem => {
+    return scoredResults.map(elem => {
       let name = namedLocation.find(loc => loc.id == elem.id).name
       return {...elem, name: name}
-    })]
+    })
   }
 
   private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
@@ -98,7 +98,7 @@ export class LocationWidgetComponent implements OnInit {
       const min = Math.min(...scores)
       const diff = max-min
       scoredLocations.forEach(location => {
-        location.scores[osmType.value] = (location.scores[osmType.value]-min)/diff
+        location.scores[osmType.value+"-normalized"] = (location.scores[osmType.value]-min)/diff // Keeping absolute score, saving normalized in new property
       })
     })
     return scoredLocations
@@ -106,9 +106,14 @@ export class LocationWidgetComponent implements OnInit {
 
   private calculateCombinedScore(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
     scoredLocations.forEach(location => {
-      const individualScores = Object.values(location.scores)
-      const sum = individualScores.reduce((a,b) => a+b)
-      location.scores.combined_score = sum / individualScores.length // Average of individual scores
+      const individualScores = Object.entries(location.scores)
+      let sum = 0
+      individualScores.forEach(score => {
+        if(score[0].endsWith("-normalized")) { // Only considering normalized scores
+          sum += score[1]
+        }
+      })
+      location.scores.combined_score = sum / (individualScores.length/2) // Average of individual normalized scores
     })
     return scoredLocations
   }
