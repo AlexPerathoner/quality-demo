@@ -53,7 +53,13 @@ export class MapService {
     }
     this.sourceMarkers = []
 
-    const startLocations = [{lng: -0.0754, lat: 51.51626}, {lng: -0.05, lat: 51.51}]
+    const startLocations = [
+      {lng: -0.075, lat: 51.51},
+      {lng: -0.05, lat: 51.51},
+      {lng: -0.025, lat: 51.51},
+      {lng: 0, lat: 51.51},
+      {lng: 0.025, lat: 51.51}
+    ]
     startLocations.forEach(async (lngLat) => {
       let title1 = (await this.reverseGeocoding.getNameOfLocation({lat: lngLat.lat, lng: lngLat.lng}))[0]
       this.addMarker(title1, lngLat)
@@ -65,7 +71,7 @@ export class MapService {
       container: 'map',
       style: this.style,
       zoom: 12,
-      center: [-0.0754,51.51626]
+      center: [-0.025,51.51626]
     })
     this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left')
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
