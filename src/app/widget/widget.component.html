@@ -3,5 +3,8 @@
     <header class="widget-title">
         <b>{{ title }}</b>
     </header>
-    <ng-content></ng-content>
+
+    <div [ngClass]="{'widget-content': !scrollable, 'widget-scrollable': scrollable}">
+        <ng-content></ng-content>
+    </div>
 </div>

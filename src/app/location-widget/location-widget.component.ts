@@ -83,22 +83,46 @@ export class LocationWidgetComponent implements OnInit {
     this.ref.detectChanges()
   }
 
-  async calculateLocationScores(sourceLocations: NamedLatLngId[]): Promise<NamedLatLngIdScores[]> {
-    const scoresResult = Object.values(await this.quality.getScores(sourceLocations))
-    let namedResult: NamedLatLngIdScores[] = scoresResult.map(elem => {
-      let name = sourceLocations.find(loc => loc.id == elem.id).name
+  private nameScoredResults(namedLocation: NamedLatLngId[], scoredResults: LatLngIdScores[]): NamedLatLngIdScores[] {
+    return [...scoredResults.map(elem => {
+      let name = namedLocation.find(loc => loc.id == elem.id).name
       return {...elem, name: name}
-    }) 
+    })]
+  }
 
-    const orderedResult = namedResult.sort((a: NamedLatLngIdScores, b: NamedLatLngIdScores): number => a.scores.stats > b.scores.stats ? 0 : 1)
-    let orderedScores = orderedResult.map(k => k.scores.stats)
-    const maxScore = Math.max(...orderedScores)
+  private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
+    // Normalizing scores for each criterion
+    Object.values(this.quality.osmTypes).forEach(osmType => {
+      const scores = scoredLocations.map(k => k.scores[osmType.value])
+      const max = Math.max(...scores)
+      const min = Math.min(...scores)
+      const diff = max-min
+      scoredLocations.forEach(location => {
+        location.scores[osmType.value] = (location.scores[osmType.value]-min)/diff
+      })
+    })
+    return scoredLocations
+  }
+
+  private calculateCombinedScore(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
+    scoredLocations.forEach(location => {
+      const individualScores = Object.values(location.scores)
+      const sum = individualScores.reduce((a,b) => a+b)
+      location.scores.combined_score = sum / individualScores.length // Average of individual scores
+    })
+    return scoredLocations
+  }
+
+  async calculateLocationScores(sourceLocations: NamedLatLngId[]): Promise<NamedLatLngIdScores[]> {
+    // Quality request
+    const scoresResult = Object.values(await this.quality.getScores(sourceLocations))
+    // Adding name of markers
+    let namedResult = this.nameScoredResults(sourceLocations, scoresResult)
+    namedResult = this.normalizeScores(namedResult)
+    namedResult = this.calculateCombinedScore(namedResult)
     
-    if(!this.useAbsoluteScores) {
-      for(let i = 0; i < orderedResult.length; i++) {
-        orderedResult[i].scores.stats = Math.round((orderedScores[i])*100/maxScore)
-      }
-    }
+    // Ordering
+    const orderedResult = namedResult.sort((a: NamedLatLngIdScores, b: NamedLatLngIdScores): number => a.scores.combined_score > b.scores.combined_score ? 0 : 1)
     return orderedResult
   }
 

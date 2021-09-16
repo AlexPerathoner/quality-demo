@@ -15,12 +15,6 @@
 	line-height: 20px;
 }
 
-.widget-content {
-    overflow-y: scroll;
-    max-height: 300px;
-	font-weight: 600;
-}
-
 .widget-content-inner {
 	width: 100%;
 	display: inline-block;
@@ -28,6 +22,7 @@
 
 .location-info {
 	display: inline-block;
+	margin-right: 2rem;
 }
 .location-id {
 	font-weight: normal;

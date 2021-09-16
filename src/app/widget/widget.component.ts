@@ -6,12 +6,8 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./widget.component.css']
 })
 export class WidgetComponent {
-  @Input()
-  id: string = ""
-
-  @Input()
-  title: string = ""
-
-  constructor() {}
+  @Input() id: string = ""
+  @Input() title: string = ""
+  @Input() scrollable = false
   
 }

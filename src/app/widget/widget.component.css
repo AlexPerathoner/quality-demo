@@ -5,6 +5,7 @@
 	margin-bottom: 1rem;
 	padding: 1rem;
 	font-size: small;
+	padding-right: 0;
 }
 
 .widget-title {
@@ -15,4 +16,15 @@
 	line-height: normal;
 	letter-spacing: normal;
 	padding-bottom: 1rem;
+}
+
+.widget-content {
+	font-weight: 600;
+	padding-right: 1rem;
+}
+
+.widget-scrollable {
+    overflow-y: scroll;
+    max-height: 370px;
+	font-weight: 600;
 }

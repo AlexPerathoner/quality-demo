@@ -170,7 +170,7 @@ body {
 	font-size: small;
 	background-color: white;
 	float:right;
-	color: var(--selected);;
+	color: var(--selected);
 }
 
 .option-button:hover {

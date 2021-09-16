@@ -1,27 +1,16 @@
-<app-widget id="locations" title="Location Scoring API:">
-
-    <span option-label>Show: </span>
-    <div class="option-container">
-        <button #absoluteBtn (click)='showAbsoluteScores()' class="standard-button option-button" style="margin-left: .5rem;">Absolute scores</button>
-        <button #relativeBtn (click)='showRelativeScores()' class="standard-button option-button selected-button">Network benchmark</button>
-    </div>
+<app-widget id="locations" title="Location ranking:" scrollable="true">
     
-    <div class="widget-content">
-        <div class="widget-content-inner">
-            <div *ngFor="let location of locations;">
-                <div class='location' [ngClass]="{'selected-location': location.id == selectedLocation}" (click)='onLocationClicked(location.id)'>
-                    <div class="location-info">
-                        <span class="location-id"> Marker {{ location.id }} </span>
-                        <span class="location-name"> {{ location.name }} </span>
-                    </div>
-                    <div *ngIf="!useAbsoluteScores && location.scores.stats != null" [ngStyle]="{'background': 'conic-gradient(' + (location.scores.stats < 40 ? '#e74c3c' : location.scores.stats < 60 ? '#f1c40f' : '#27ae60') + ' ' + location.scores.stats +'%, transparent 0 100%)'}" class="rating" [ngClass]="{'meh': location.scores.stats < 60 && location.scores.stats >= 40, 'bad': location.scores.stats < 40, 'good': location.scores.stats >= 60}">
-                        <span>{{ location.scores.stats }}</span>
-                    </div>
-                    <div *ngIf="useAbsoluteScores" class="absolute-rating">
-                        {{ location.scores.stats }}
-                    </div>
-                    <br>
+    <div class="widget-content-inner">
+        <div *ngFor="let location of locations;">
+            <div class='location' [ngClass]="{'selected-location': location.id == selectedLocation}" (click)='onLocationClicked(location.id)'>
+                <div class="location-info">
+                    <span class="location-id"> Marker {{ location.id }} </span>
+                    <span class="location-name"> {{ location.name }} </span>
                 </div>
+                <div [ngStyle]="{'background': 'conic-gradient(' + (location.scores.combined_score < .4 ? '#e74c3c' : location.scores.combined_score < .6 ? '#f1c40f' : '#27ae60') + ' ' + location.scores.combined_score*100 +'%, transparent 0 100%)'}" class="rating" [ngClass]="{'meh': location.scores.combined_score < .6 && location.scores.combined_score >= .4, 'bad': location.scores.combined_score < .4, 'good': location.scores.combined_score >= .6}">
+                    <span>{{ location.scores.combined_score*100 | number:'1.0-0' }}</span>
+                </div>
+                <br>
             </div>
         </div>
     </div>
