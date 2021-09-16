@@ -116,7 +116,7 @@ export class MapService {
       x => x.model = new PopupModel(title1, title2, "Add marker", () => {
         this.hideContextMenu()
         this.addMarker(title1, lngLat)
-      }));
+      }, this.sourceMarkers.length < 30, "Too many locations: 30 allowed."));
     
     const offset: mapboxgl.PointLike = [175, 75]
     this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })

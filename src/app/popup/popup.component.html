@@ -5,5 +5,5 @@
         <span>{{this.model.title1}}</span><br>
         <span>{{this.model.title2}}</span>
     </div>
-    <button (click)='btnClicked()' class="standard-button">{{ this.model.btnTitle }}</button>
+    <button (click)='onClick()' class="standard-button" [ngClass]="{disabled: !this.model.isEnabled}">{{ this.model.btnTitle }}</button>
 </div>
