@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core'
-import { LatLngId, TravelMode } from '@targomo/core'
-import { client, EDGE_WEIGHT, MAX_TRAVEL, TRAVEL_MODE } from './global'
+import { EdgeWeightType, LatLngId, TravelMode, TravelType } from '@targomo/core'
+import { client } from './global'
 
 
 @Injectable({providedIn: 'root'})
 
 export class QualityRequest {
+  // Travel options
+  edgeWeight: EdgeWeightType = 'time' // Can be 'time' or 'distance'
+  maxTravel = 1800 // Integer that represents meters or seconds, depending on EDGE_WEIGHT's value
+  travelMode: TravelType = 'walk' // Can be 'walk', 'car', 'bike' or 'transit'
+
+  setTravelMode(travelMode: TravelType) {
+    this.travelMode = travelMode
+  }
 
   async getScores(locations: LatLngId[]) {
     // Counting the reachable population for each location
@@ -18,9 +26,9 @@ export class QualityRequest {
                 'value': "supermarket"
             }
         ],
-        maxEdgeWeight: MAX_TRAVEL,
-        edgeWeight: EDGE_WEIGHT,
-        travelMode: {[TRAVEL_MODE]: {}} as TravelMode,
+        maxEdgeWeight: this.maxTravel,
+        edgeWeight: this.edgeWeight,
+        travelMode: {[this.travelMode]: {}} as TravelMode,
         coreServiceUrl: 'https://api.targomo.com/britishisles/'
       }
     })

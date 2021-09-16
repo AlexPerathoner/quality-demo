@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { setTravelMode } from 'services/global';
+import { TravelType } from '@targomo/core';
 import { MapService } from 'services/map.service';
+import { QualityRequest } from 'services/quality-requests.service';
 @Component({
   selector: 'app-settings-view',
   templateUrl: './settings-view.component.html',
@@ -10,7 +11,7 @@ export class SettingsViewComponent implements OnChanges {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
 
-    constructor(private map: MapService) { }
+    constructor(private map: MapService, private qualityService: QualityRequest) { }
 
     ngOnChanges(): void {
         if(this.isVisible) {
@@ -46,7 +47,7 @@ export class SettingsViewComponent implements OnChanges {
         document.addEventListener("keyup", this.handleKeystroke);        
     }
 
-    changeTravelMode(mode) {
+    changeTravelMode(mode: TravelType) {
         // changing buttons style
         const features = document.getElementsByClassName('travel-mode-btn')
         for(let i=0; i<features.length; i++) {
@@ -57,7 +58,7 @@ export class SettingsViewComponent implements OnChanges {
                 element.classList.remove("selected-button")
             }
         }
-        setTravelMode(mode)
+        this.qualityService.travelMode = mode
         this.map.updateMap()
     }
 
