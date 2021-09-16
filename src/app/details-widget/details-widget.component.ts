@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NamedLatLngIdScores, NamedMarker } from 'app/types/types';
 import { MapService } from 'services/map.service';
 
 @Component({
@@ -11,10 +12,12 @@ export class DetailsWidgetComponent implements OnInit {
   id = 0
   isVisible = false
 
+  @Input() location: NamedLatLngIdScores
+
   constructor(private map: MapService) { }
 
   ngOnInit(): void {
-    this.map.getMarkerSelectionListener()
+    /*this.map.getMarkerSelectionListener()
       .subscribe((marker) => {
         if(marker) {
           this.title = marker.name
@@ -23,7 +26,7 @@ export class DetailsWidgetComponent implements OnInit {
         } else {
           this.isVisible = false
         }
-      })
+      })*/
   }
 
 }

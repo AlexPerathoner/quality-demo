@@ -20,7 +20,7 @@ export class LocationWidgetComponent implements OnInit {
   useAbsoluteScores = false
   isShowingLoadingLabel = false
 
-  @Output() selectedMarker = new EventEmitter()
+  @Output() selectedMarker = new EventEmitter<NamedLatLngIdScores>()
   
   @ViewChild('loadingLabel') loadingLabel;
   @ViewChild('relativeBtn') relativeBtn;
@@ -114,6 +114,7 @@ export class LocationWidgetComponent implements OnInit {
 
   unselectMarker() {
     this.selectedLocation = null
+    this.selectedMarker.emit(null)
   }
 
   onLocationClicked(markerId: number) {
@@ -124,7 +125,7 @@ export class LocationWidgetComponent implements OnInit {
   selectMarker(markerId: number) {
     this.selectedLocation = markerId
     this.ref.detectChanges()
-    this.selectedMarker.emit(markerId)
+    this.selectedMarker.emit(this.locations.find(e => e.id == markerId))
   }
 
 }

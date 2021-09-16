@@ -1,12 +1,12 @@
 <app-map ></app-map>
 <app-sidebar corner='top-left'>
-	<app-location-widget></app-location-widget>
+	<app-location-widget (selectedMarker)="selectLocation($event)"></app-location-widget>
 </app-sidebar>
 <app-sidebar corner='top-right'>
 	<app-settings-btn (clicked)="settingsModalIsVisible = true"></app-settings-btn>
 	<app-reset-btn></app-reset-btn>
 </app-sidebar>
 <app-sidebar corner='bottom-right'>
-	<app-details-widget></app-details-widget>
+	<app-details-widget [location]="selectedLocation"></app-details-widget>
 </app-sidebar>
 <app-settings-view [isVisible]="settingsModalIsVisible" (closeClicked)="settingsModalIsVisible = false"></app-settings-view>

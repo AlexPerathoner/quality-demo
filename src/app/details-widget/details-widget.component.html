@@ -1,4 +1,4 @@
-<app-widget id="details" title="Details" *ngIf="isVisible">
-    <span class="id">Marker {{id}}</span><br>
-    <span class="title">{{title}}</span>
+<app-widget id="details" title="Details" *ngIf="location">
+    <span class="id">Marker {{location.id}}</span><br>
+    <span class="title">{{location.name}}</span>
 </app-widget>

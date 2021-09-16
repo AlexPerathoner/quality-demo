@@ -162,12 +162,10 @@ export class MapService {
     marker.on('dragend', async () => {
       this.selectMarker(markerId)
       marker.name = (await this.reverseGeocoding.getNameOfLocation(marker.getLngLat()))[0]
-      this.markerSelected.next(marker)
       this.updateMap()
     })
     marker.getElement().addEventListener('click', () => {
       this.markerToSelect = markerId
-      this.markerSelected.next(marker)
     })
 
     this.sourceMarkers.push(marker)
