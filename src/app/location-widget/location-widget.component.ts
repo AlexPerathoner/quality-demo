@@ -15,7 +15,7 @@ import { QualityRequest } from 'services/quality-requests.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationWidgetComponent implements OnInit {
-  private selectedLocation: number | null = null
+  private selectedLocationId: number | null = null
   locations: NamedLatLngIdScores[] = []
   useAbsoluteScores = false
 
@@ -56,6 +56,9 @@ export class LocationWidgetComponent implements OnInit {
     this.map.getMarkerUpdateListener()
       .subscribe(async (newLocations) => {
         this.locations = await this.calculateLocationScores(newLocations)
+        if(this.selectedLocationId) {
+          this.selectedMarker.emit(this.locations.find(e => e.id == this.selectedLocationId))
+        }
         this.ref.detectChanges()
       })
     this.map.getMarkerSelectionListener()
@@ -128,7 +131,7 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   unselectMarker() {
-    this.selectedLocation = null
+    this.selectedLocationId = null
     this.selectedMarker.emit(null)
   }
 
@@ -138,9 +141,9 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   selectMarker(markerId: number) {
-    this.selectedLocation = markerId
+    this.selectedLocationId = markerId
     this.ref.detectChanges()
-    this.selectedMarker.emit(this.locations.find(e => e.id == markerId))
+    this.selectedMarker.emit(this.locations.find(e => e.id == markerId))    
   }
 
   deleteMarker(id) {
