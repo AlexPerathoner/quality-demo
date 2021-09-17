@@ -12,16 +12,19 @@
 	color: red
 }
 
-progress-circle ::ng-deep div {
-	position: relative;
-	bottom: 2.5rem;
-	left: 1rem
-}
-
 th {
 	white-space: nowrap;
 }
 
-table {
-	border-spacing: 1rem;
+.row-title {
+	font-weight: bold;
+}
+
+.score {
+	text-align: right;
+	padding-right: 1rem;
+}
+
+.progress-container {
+	display: table-row;
 }
