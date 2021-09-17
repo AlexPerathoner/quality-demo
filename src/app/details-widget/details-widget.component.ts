@@ -15,8 +15,4 @@ export class DetailsWidgetComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  deleteMarker() {
-    this.map.removeMarker(this.location.id)
-  }
-
 }

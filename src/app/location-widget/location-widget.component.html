@@ -8,6 +8,7 @@
                     <span class="location-name"> {{ location.name }} </span>
                 </div>
                 <div class="ranking-container">
+                    <mat-icon role="img" class="mat-icon notranslate material-icons-round" id="delete-icon" aria-hidden="true" data-mat-icon-type="font" (click)="$event.stopPropagation(); deleteMarker(location.id)">delete</mat-icon>
                     <span class="ranking" [ngClass]="{'first': i==0, 'second': i==1, 'third': i==2}">{{ i+1 }}°</span>
                 </div>
                 <br>

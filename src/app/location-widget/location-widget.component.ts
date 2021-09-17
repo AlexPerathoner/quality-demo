@@ -143,4 +143,8 @@ export class LocationWidgetComponent implements OnInit {
     this.selectedMarker.emit(this.locations.find(e => e.id == markerId))
   }
 
+  deleteMarker(id) {
+    this.map.removeMarker(id)
+  }
+
 }

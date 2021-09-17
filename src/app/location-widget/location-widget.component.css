@@ -59,8 +59,23 @@
 	position: fixed;
 }
 
+/* Displaying delete button when location is hovered, otherwise show ranking */
+#delete-icon {
+	display: none;
+	line-height: 2rem;
+	height: 2rem;
+}
+#delete-icon:hover {
+	color: red;
+}
+.location:hover #delete-icon { display: block; }
+.location:hover .ranking { display: none; }
 
 
+.ranking-container {
+	float: right;
+	width: 1.1rem;
+}
 .ranking {
 	font-weight: 900;
 	color:#333;
