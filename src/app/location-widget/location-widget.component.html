@@ -7,9 +7,7 @@
                     <span class="location-id"> Marker {{ location.id }} </span>
                     <span class="location-name"> {{ location.name }} </span>
                 </div>
-                <div [ngStyle]="{'background': 'conic-gradient(' + (location.scores.combined_score < .4 ? '#e74c3c' : location.scores.combined_score < .6 ? '#f1c40f' : '#27ae60') + ' ' + location.scores.combined_score*100 +'%, transparent 0 100%)'}" class="rating" [ngClass]="{'meh': location.scores.combined_score < .6 && location.scores.combined_score >= .4, 'bad': location.scores.combined_score < .4, 'good': location.scores.combined_score >= .6}">
-                    <span>{{ location.scores.combined_score*100 | number:'1.0-0' }}</span>
-                </div>
+                <progress-circle [value]="location.scores.combined_score"></progress-circle>
                 <br>
             </div>
         </div>

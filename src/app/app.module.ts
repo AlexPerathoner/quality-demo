@@ -19,6 +19,7 @@ import { ResetBtnComponent } from './reset-btn/reset-btn.component';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { DetailsWidgetComponent } from './details-widget/details-widget.component';
+import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { DetailsWidgetComponent } from './details-widget/details-widget.componen
     SettingsBtnComponent,
     ResetBtnComponent,
     DetailsWidgetComponent,
+    ProgressCircleComponent,
   ],
   imports: [
     BrowserModule,
