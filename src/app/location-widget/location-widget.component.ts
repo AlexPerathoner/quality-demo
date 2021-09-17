@@ -127,7 +127,7 @@ export class LocationWidgetComponent implements OnInit {
     namedResult = this.calculateCombinedScore(namedResult)
     
     // Ordering
-    const orderedResult = namedResult.sort((a: NamedLatLngIdScores, b: NamedLatLngIdScores): number => a.scores.combined_score > b.scores.combined_score ? 0 : 1)
+    const orderedResult = namedResult.sort((a: NamedLatLngIdScores, b: NamedLatLngIdScores): number => a.scores.combined_score > b.scores.combined_score ? -1 : 1)
     return orderedResult
   }
 

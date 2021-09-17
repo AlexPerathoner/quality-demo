@@ -4,10 +4,14 @@
 }
 
 #delete-icon {
-	color: red;
+	color: #222;
 	cursor: pointer;
 	float: right;
 	position: relative;
 	bottom: 40px;
     left: 7px
+}
+
+#delete-icon:hover {
+	color: red
 }
