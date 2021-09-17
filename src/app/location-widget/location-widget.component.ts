@@ -18,11 +18,9 @@ export class LocationWidgetComponent implements OnInit {
   private selectedLocation: number | null = null
   locations: NamedLatLngIdScores[] = []
   useAbsoluteScores = false
-  isShowingLoadingLabel = false
 
   @Output() selectedMarker = new EventEmitter<NamedLatLngIdScores>()
   
-  @ViewChild('loadingLabel') loadingLabel;
   @ViewChild('relativeBtn') relativeBtn;
   @ViewChild('absoluteBtn') absoluteBtn;
 
@@ -44,7 +42,6 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   public async toggleScoringSystem() {
-    this.showLoadingLabel()
     
     this.locations.forEach((elem) => { // Immediately putting empty data
       elem.scores.stats = null
@@ -54,21 +51,11 @@ export class LocationWidgetComponent implements OnInit {
     this.updateLocations() // Asynchronously updating data
   }
 
-  private showLoadingLabel() {
-    this.isShowingLoadingLabel = true
-  }
-
-  private hideLoadingLabel() {
-    this.isShowingLoadingLabel = false
-  }
-
   ngOnInit(): void {
     this.updateLocations()
     this.map.getMarkerUpdateListener()
       .subscribe(async (newLocations) => {
-        this.showLoadingLabel()
         this.locations = await this.calculateLocationScores(newLocations)
-        this.hideLoadingLabel()
         this.ref.detectChanges()
       })
     this.map.getMarkerSelectionListener()
@@ -79,7 +66,6 @@ export class LocationWidgetComponent implements OnInit {
 
   async updateLocations() {
     this.locations = await this.calculateLocationScores(this.map.getMarkersLocations())
-    this.hideLoadingLabel()
     this.ref.detectChanges()
   }
 
