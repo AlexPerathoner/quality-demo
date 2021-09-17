@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Injectable, OnInit, Output, ViewChild } from '@angular/core';
-import { LatLngId, LatLngIdScores } from '@targomo/core';
+import { LatLngIdScores } from '@targomo/core';
 import { NamedLatLngId, NamedLatLngIdScores, NamedMarker } from 'app/types/types';
 import { MapService } from 'services/map.service';
 import { QualityRequest } from 'services/quality-requests.service';

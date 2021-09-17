@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { EdgeWeightType, LatLngId, OSMType, PoiGroup, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
+import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
 import { client } from './global'
 
 

@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
-import { NamedLatLngIdScores, NamedMarker } from 'app/types/types';
+import { Component, Input } from '@angular/core';
+import { NamedLatLngIdScores } from 'app/types/types';
 import { QualityRequest } from 'services/quality-requests.service';
 
 @Component({
