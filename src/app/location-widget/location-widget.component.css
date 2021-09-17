@@ -61,8 +61,24 @@
 
 
 
-  
+.ranking {
+	font-weight: 900;
+	color:#333;
+	line-height: 2rem;
+	font-size: 1rem;
+}
 
+.ranking.first {
+	color: #DDA104;
+}
+
+.ranking.second {
+	color: silver
+}
+
+.ranking.third {
+	color: #cd7f32
+}
 
 .option-button {
     border-radius: 0.5rem;
