@@ -1,18 +1,15 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { NamedLatLngIdScores, NamedMarker } from 'app/types/types';
-import { MapService } from 'services/map.service';
+import { QualityRequest } from 'services/quality-requests.service';
 
 @Component({
   selector: 'app-details-widget',
   templateUrl: './details-widget.component.html',
   styleUrls: ['./details-widget.component.css']
 })
-export class DetailsWidgetComponent implements OnInit {
+export class DetailsWidgetComponent {
   @Input() location: NamedLatLngIdScores
 
-  constructor(private map: MapService) { }
-
-  ngOnInit(): void {
-  }
+  constructor(public quality: QualityRequest) { }
 
 }

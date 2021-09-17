@@ -1,5 +1,19 @@
-<app-widget id="details" title="Details" *ngIf="location">
+<app-widget id="details" title="{{location.name}}" *ngIf="location">
     <progress-circle [value]="location.scores.combined_score"></progress-circle>
-    <span class="id">Marker {{location.id}}</span><br>
-    <span class="title">{{location.name}}</span>
+    <span>Marker {{location.id}} details:</span>
+
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>No. of nearby POI</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tr *ngFor="let POIType of this.quality.selectedPOITypes">
+            <td>{{ POIType.name }}</td>
+            <td>{{ this.location.scores[POIType.id] }}</td>
+            <td>{{ this.location.scores[POIType.id+"-normalized"]*100 | number:'1.0-0' }}%</td>
+        </tr>
+    </table>
 </app-widget>

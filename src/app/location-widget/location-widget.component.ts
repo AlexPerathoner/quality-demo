@@ -78,7 +78,7 @@ export class LocationWidgetComponent implements OnInit {
 
   private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
     // Normalizing scores for each criterion
-    Object.values(this.quality.osmTypes).forEach(osmType => {
+    Object.values(this.quality.getOsmTypes()).forEach(osmType => {
       const scores = scoredLocations.map(k => k.scores[osmType.value])
       const max = Math.max(...scores)
       const min = Math.min(...scores)

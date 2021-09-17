@@ -1,7 +1,3 @@
-.title {
-    margin-top: 1rem;
-    font-weight: bold;
-}
 
 #delete-icon {
 	color: #222;
@@ -14,4 +10,18 @@
 
 #delete-icon:hover {
 	color: red
+}
+
+progress-circle ::ng-deep div {
+	position: relative;
+	bottom: 2.5rem;
+	left: 1rem
+}
+
+th {
+	white-space: nowrap;
+}
+
+table {
+	border-spacing: 1rem;
 }
