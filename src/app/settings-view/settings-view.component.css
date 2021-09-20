@@ -1,4 +1,14 @@
 
+::ng-deep .mat-accent .mat-slider-thumb {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-thumb-label {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-track-fill {
+  background-color: black;
+}
+
 
 [data-animation="slideInOutLeft"] .modal-dialog {
   opacity: 0;
@@ -30,6 +40,16 @@ button {
   border: none;
   outline: none;
   font-size: inherit;
+}
+
+.mat-slide-toggle {
+  transform: scale(0.6);
+}
+
+.subtitle {
+  margin-bottom: .5rem;
+  margin-top: 1rem;
+  display: block;
 }
    
 .open-modal {

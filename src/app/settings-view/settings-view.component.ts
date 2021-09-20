@@ -11,7 +11,7 @@ export class SettingsViewComponent implements OnChanges {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
 
-    constructor(private map: MapService, private qualityService: QualityService) { }
+    constructor(private map: MapService, public qualityService: QualityService) { }
 
     ngOnChanges(): void {
         if(this.isVisible) {
@@ -49,6 +49,11 @@ export class SettingsViewComponent implements OnChanges {
 
     changeTravelMode(mode: TravelType) {
         this.qualityService.travelMode = mode
+        this.map.updateMap()
+    }
+
+    onMaxTravelChanged(event) {
+        this.qualityService.maxTravel = event.value
         this.map.updateMap()
     }
 

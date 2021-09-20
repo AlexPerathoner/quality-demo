@@ -1,4 +1,7 @@
- 
+:host {
+	display: inline-block;
+}
+
 .btn-group {
     text-align: center;
 }

@@ -5,18 +5,21 @@
             Settings
             <button class="close-modal" aria-label="close modal" (click)="onClose()">✕</button>
         </header>
-
-
-
-        <div class="ng-star-inserted tgm-traveltype-select">
-            <div class="loop-overlay-individual-select ng-star-inserted">
-                <option-btn (clicked)="changeTravelMode('walk')" iconName="directions_walk" name="Walk"></option-btn>
-                <option-btn (clicked)="changeTravelMode('bike')" iconName="directions_bike" name="Bike"></option-btn>
-                <option-btn (clicked)="changeTravelMode('transit')" iconName="tram" name="Transit"></option-btn>
-                <option-btn (clicked)="changeTravelMode('car')" iconName="directions_car" name="Car"></option-btn>
+        <div class="option">
+            <span class="subtitle">Travel Mode:</span>
+            <div class="ng-star-inserted tgm-traveltype-select">
+                <div class="loop-overlay-individual-select ng-star-inserted">
+                    <option-btn (clicked)="changeTravelMode('walk')" iconName="directions_walk" name="Walk"></option-btn>
+                    <option-btn (clicked)="changeTravelMode('bike')" iconName="directions_bike" name="Bike"></option-btn>
+                    <option-btn (clicked)="changeTravelMode('transit')" iconName="tram" name="Transit"></option-btn>
+                    <option-btn (clicked)="changeTravelMode('car')" iconName="directions_car" name="Car"></option-btn>
+                </div>
             </div>
         </div>
-
-
+        <div class="option">
+            <span class="subtitle">Maximum Travel Time:</span>
+            <mat-slider min="60" max="1800" step="60" value="1800" (change)="onMaxTravelChanged($event)"></mat-slider>
+            <span style="padding-left: 1rem;">{{ this.qualityService.maxTravel/60 | number:'1.0-0' }} minutes</span>
+        </div>
     </div>
 </div>

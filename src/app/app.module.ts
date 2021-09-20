@@ -21,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { DetailsWidgetComponent } from './details-widget/details-widget.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { OptionBtnComponent } from './option-btn/option-btn.component';
+import { MatSliderModule } from '@angular/material/slider'; 
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { OptionBtnComponent } from './option-btn/option-btn.component';
     MatProgressSpinnerModule,
     MatOptionModule,
     MatSelectModule,
+    MatSliderModule,
   ],
   providers: [DynamicComponentService],
   bootstrap: [AppComponent]
