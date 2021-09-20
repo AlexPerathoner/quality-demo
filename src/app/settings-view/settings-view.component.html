@@ -1,10 +1,5 @@
-
-<div class="modal" id="modal-settings" [ngClass]="{'is-visible': isVisible}">
-    <div class="modal-dialog">
-        <header class="modal-header">
-            Settings
-            <button class="close-modal" aria-label="close modal" (click)="onClose()">✕</button>
-        </header>
+<modal [isVisible]="isVisible" (closeClicked)="onClose()" name="Settings">
+    <div class="settings-row">
         <div class="option">
             <span class="subtitle">Travel Mode:</span>
             <div class="ng-star-inserted tgm-traveltype-select">
@@ -16,10 +11,20 @@
                 </div>
             </div>
         </div>
-        <div class="option">
+        <div class="option" style="margin-right: auto; margin-left: auto;">
             <span class="subtitle">Maximum Travel Time:</span>
             <mat-slider min="60" max="1800" step="60" value="1800" (change)="onMaxTravelChanged($event)"></mat-slider>
             <span style="padding-left: 1rem;">{{ this.qualityService.maxTravel/60 | number:'1.0-0' }} minutes</span>
         </div>
     </div>
-</div>
+    <div class="settings-row">
+        <div class="option" style="width: 100%;">
+            <span class="subtitle">Selected POIs:</span>
+            <div class="poi-card clickable" *ngFor="let poi of this.qualityService.selectedPOITypes">
+                <span class="poi-type">{{ poi.type }}</span>
+                <span class="poi-name">{{ poi.name }}</span>
+            </div>
+            <button (click)='onShowPOISelection()' class="standard-button">Add POI Group</button>
+        </div>
+    </div>
+</modal>

@@ -7,45 +7,15 @@ import { QualityService } from 'services/quality.service';
   templateUrl: './settings-view.component.html',
   styleUrls: ['./settings-view.component.css']
 })
-export class SettingsViewComponent implements OnChanges {
+export class SettingsViewComponent {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
+  
+    onClose() {
+      this.closeClicked.emit("")
+    }
 
     constructor(private map: MapService, public qualityService: QualityService) { }
-
-    ngOnChanges(): void {
-        if(this.isVisible) {
-            this.setupCloseListeners()
-        } else {
-            this.removeListeners()
-        }
-    }
-
-    onClose() {
-        this.closeClicked.emit("")
-    }
-
-    handleClick = (event) => {
-        if (event.target == document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
-
-    handleKeystroke = (event) => {
-        if (event.key == "Escape" && document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
-
-    private removeListeners() {
-        document.removeEventListener("click", this.handleClick);
-        document.removeEventListener("keyup", this.handleKeystroke);
-    }
-
-    private setupCloseListeners() {
-        document.addEventListener("click", this.handleClick);
-        document.addEventListener("keyup", this.handleKeystroke);        
-    }
 
     changeTravelMode(mode: TravelType) {
         this.qualityService.travelMode = mode

@@ -21,7 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { DetailsWidgetComponent } from './details-widget/details-widget.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { OptionBtnComponent } from './option-btn/option-btn.component';
-import { MatSliderModule } from '@angular/material/slider'; 
+import { MatSliderModule } from '@angular/material/slider';
+import { ModalComponent } from './modal/modal.component'; 
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MatSliderModule } from '@angular/material/slider';
     DetailsWidgetComponent,
     ProgressCircleComponent,
     OptionBtnComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
