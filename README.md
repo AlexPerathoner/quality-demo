@@ -25,3 +25,26 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+# Quality Service Demo 
+## What is the quality service?
+
+## How does this demo use the quality service?
+
+## What does this demo show?
+
+## What technologies are being used?
+
+### TS Quality Client
+### Angular & Typescript
+### GitHub Integration
+#### GitHub actions to build the web page to GitHub Pages
+#### GitHub secrets to hide the API Keys
+
+## Important functions, in detail
+### Requesting scores to the quality service
+### Generating a meaningful rating
+### Settings: customizing and creating your own rating system
+
+## Building the project
