@@ -22,8 +22,11 @@ import { DetailsWidgetComponent } from './details-widget/details-widget.componen
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { OptionBtnComponent } from './option-btn/option-btn.component';
 import { MatSliderModule } from '@angular/material/slider';
-import { PoiSelectionDialogComponent } from './poi-selection-dialog/poi-selection-dialog.component';
-import { ModalComponent } from './modal/modal.component'; 
+import { ModalComponent } from './modal/modal.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { PoiAccordionComponent } from './poi-accordion/poi-accordion.component'; 
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -40,8 +43,8 @@ import { ModalComponent } from './modal/modal.component';
     DetailsWidgetComponent,
     ProgressCircleComponent,
     OptionBtnComponent,
-    PoiSelectionDialogComponent,
     ModalComponent,
+    PoiAccordionComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,9 @@ import { ModalComponent } from './modal/modal.component';
     MatOptionModule,
     MatSelectModule,
     MatSliderModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatCheckboxModule,
   ],
   providers: [DynamicComponentService],
   bootstrap: [AppComponent]

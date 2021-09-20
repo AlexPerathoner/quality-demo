@@ -44,3 +44,16 @@
 	margin-top: 1rem;
 	display: block;
 }
+
+.pois-container {
+  overflow-y: auto;
+  max-height: 470px;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+}
+
+.control-buttons {
+	float: right;
+	margin-bottom: 1rem;
+	margin-right: 2rem;
+}

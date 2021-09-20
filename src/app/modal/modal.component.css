@@ -58,17 +58,17 @@
 .modal-inner, .dialog-inner  {
 	position: relative;
 	width: 800px;
-	height: 80vh;
 	max-height: 80vh;
 	border-radius: 5px;
 	background: var(--white);
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 	cursor: default;
 }
 .dialog-inner {
 	padding: 1rem;
 	width: 500px;
-	height: 35vh;
+	height: 50vh;
 	box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 5px 8px 0 rgba(0,0,0,.14),0 1px 14px 0 rgba(0,0,0,.12);
 }
 

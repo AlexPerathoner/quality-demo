@@ -17,15 +17,21 @@
             <span style="padding-left: 1rem;">{{ this.qualityService.maxTravel/60 | number:'1.0-0' }} minutes</span>
         </div>
     </div>
-    <div class="settings-row">
+    <div>
         <div class="option" style="width: 100%;">
             <span class="subtitle">Selected POIs:</span>
-            <div class="poi-card clickable" *ngFor="let poi of this.qualityService.selectedPOITypes">
+            <div class="pois-container">
+                <poi-accordion [poiList]='this.qualityService.poiHierarchy'></poi-accordion>
+            </div>
+            <!--<div class="poi-card clickable" *ngFor="let poi of this.qualityService.selectedPOITypes">
                 <span class="poi-type">{{ poi.type }}</span>
                 <span class="poi-name">{{ poi.name }}</span>
-            </div>
-            <button (click)='onShowPOISelection()' class="standard-button">Add POI Group</button>
+            </div>-->
+        </div>
+    </div>
+    <div class="option" style="width: 100%;">
+        <div class="control-buttons">
+            <button (click)='onSave()' class="standard-button">Save</button>
         </div>
     </div>
 </modal>
-<poi-selection-dialog [isVisible]="poiSelectionModalIsVisible" (closeClicked)="poiSelectionModalIsVisible = false"></poi-selection-dialog>

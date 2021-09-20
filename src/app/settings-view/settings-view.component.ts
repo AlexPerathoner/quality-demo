@@ -10,7 +10,6 @@ import { QualityService } from 'services/quality.service';
 export class SettingsViewComponent {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
-    poiSelectionModalIsVisible = false
   
     onClose() {
       this.closeClicked.emit("")
@@ -28,7 +27,7 @@ export class SettingsViewComponent {
         this.map.updateMap()
     }
 
-    onShowPOISelection() {
-        this.poiSelectionModalIsVisible = true
+    onSave() {
+
     }
 }
