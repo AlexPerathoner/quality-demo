@@ -22,6 +22,7 @@ import { DetailsWidgetComponent } from './details-widget/details-widget.componen
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { OptionBtnComponent } from './option-btn/option-btn.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { PoiSelectionDialogComponent } from './poi-selection-dialog/poi-selection-dialog.component';
 import { ModalComponent } from './modal/modal.component'; 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { ModalComponent } from './modal/modal.component';
     DetailsWidgetComponent,
     ProgressCircleComponent,
     OptionBtnComponent,
+    PoiSelectionDialogComponent,
     ModalComponent,
   ],
   imports: [
