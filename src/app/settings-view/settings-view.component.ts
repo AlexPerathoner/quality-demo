@@ -48,16 +48,6 @@ export class SettingsViewComponent implements OnChanges {
     }
 
     changeTravelMode(mode: TravelType) {
-        // changing buttons style
-        const features = document.getElementsByClassName('travel-mode-btn')
-        for(let i=0; i<features.length; i++) {
-            const element = features[i]
-            if(element.id == mode) {
-                element.classList.add("selected-button")
-            } else {
-                element.classList.remove("selected-button")
-            }
-        }
         this.qualityService.travelMode = mode
         this.map.updateMap()
     }

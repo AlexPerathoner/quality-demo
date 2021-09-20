@@ -1,0 +1,61 @@
+ 
+.btn-group {
+    text-align: center;
+}
+  
+.tgm-traveltype-select {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+.tgm-simple-button {
+	display: block;
+	float: left;
+	margin-right: 8px;
+	color: rgb(0, 36, 43)
+}
+
+.selected-button {
+	background-color: var(--selected);
+	color: rgb(255, 255, 255);
+}
+
+.button-inner {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+.option-button {
+	font-family: "Roboto";
+	font-weight: 600;
+	font-size: small;
+	background-color: white;
+	float:right;
+	color: var(--selected);
+}
+
+.option-button:hover {
+	background-color: #ddd;
+	color: var(--selected);
+}
+
+.loop-overlay-individual-select {
+    display: flex;
+}
+.label {
+    font-size: 10px;
+    font-weight: 400;
+    text-align: center;
+}
+
+
+button {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: inherit;
+}

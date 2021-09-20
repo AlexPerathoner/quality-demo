@@ -20,6 +20,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { DetailsWidgetComponent } from './details-widget/details-widget.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
+import { OptionBtnComponent } from './option-btn/option-btn.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ProgressCircleComponent } from './progress-circle/progress-circle.compo
     ResetBtnComponent,
     DetailsWidgetComponent,
     ProgressCircleComponent,
+    OptionBtnComponent,
   ],
   imports: [
     BrowserModule,
