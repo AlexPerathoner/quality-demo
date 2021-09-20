@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { TravelType } from '@targomo/core';
 import { MapService } from 'services/map.service';
-import { QualityRequest } from 'services/quality-requests.service';
+import { QualityService } from 'services/quality.service';
 @Component({
   selector: 'app-settings-view',
   templateUrl: './settings-view.component.html',
@@ -11,7 +11,7 @@ export class SettingsViewComponent implements OnChanges {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
 
-    constructor(private map: MapService, private qualityService: QualityRequest) { }
+    constructor(private map: MapService, private qualityService: QualityService) { }
 
     ngOnChanges(): void {
         if(this.isVisible) {

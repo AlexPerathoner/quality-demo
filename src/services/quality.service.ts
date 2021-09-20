@@ -5,7 +5,7 @@ import { client } from './global'
 
 @Injectable({providedIn: 'root'})
 
-export class QualityRequest {
+export class QualityService {
    coreServiceUrl = 'https://api.targomo.com/britishisles/'
    // Travel options
    edgeWeight: EdgeWeightType = 'time' // Can be 'time' or 'distance'

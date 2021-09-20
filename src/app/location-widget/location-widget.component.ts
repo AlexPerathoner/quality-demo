@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { LatLngIdScores } from '@targomo/core';
 import { NamedLatLngId, NamedLatLngIdScores, NamedMarker } from 'app/types/types';
 import { MapService } from 'services/map.service';
-import { QualityRequest } from 'services/quality-requests.service';
+import { QualityService } from 'services/quality.service';
 
 
 @Injectable({
@@ -24,7 +24,7 @@ export class LocationWidgetComponent implements OnInit {
   @ViewChild('relativeBtn') relativeBtn;
   @ViewChild('absoluteBtn') absoluteBtn;
 
-  constructor(private quality: QualityRequest, private map: MapService, private ref: ChangeDetectorRef) {
+  constructor(private quality: QualityService, private map: MapService, private ref: ChangeDetectorRef) {
     ref.detach()
   }
 

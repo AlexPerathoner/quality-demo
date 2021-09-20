@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { QualityRequest } from 'services/quality-requests.service';
+import { QualityService } from 'services/quality.service';
 
 @Component({
   selector: 'option-btn',
@@ -12,7 +12,7 @@ export class OptionBtnComponent {
   @Input() iconName: string
   @Output() clicked = new EventEmitter<string>()
 
-  constructor(private quality: QualityRequest) {
+  constructor(private quality: QualityService) {
   }
 
   onClick() {
