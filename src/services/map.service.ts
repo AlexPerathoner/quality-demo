@@ -8,6 +8,7 @@ import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
 import { LocationNamesService } from './location-names.service'
+import { QualityRequest } from './quality-requests.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -23,7 +24,7 @@ export class MapService {
   private markersUpdated = new Subject<NamedLatLngId[]>()
   private markerSelected = new Subject<NamedMarker>()
   
-  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, private quality: QualityRequest, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -69,6 +70,7 @@ export class MapService {
       {lng: 0, lat: 51.51, id: 4},
       {lng: 0.025, lat: 51.51, id: 5}
     ]
+    this.quality.registerInitialRequest(startLocations)
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
       return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
     }))
@@ -87,27 +89,71 @@ export class MapService {
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
     this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }),"bottom-left")
     this.resetMarkers()
-    this.map.on('click', (e) => {     
-      // Clicking on the map while a marker is selected will unselect the marker
-      // Clicking on the map while the context popup is shown will hide the popup
-      // Clicking on the map while no marker is selected or popup is shown will show the popup 
-      // Clicking on a marker will select the marker 
-      if(this.markerToSelect) {
-        this.selectMarker(this.markerToSelect)
-        this.markerToSelect = null
-      } else {
-        if(this.isMarkerSelected()) {
-          this.markerSelected.next(null)
-          this.unselectMarker()
+    this.map.on('load', () => {
+
+      this.addPOILayer()
+      this.map.on('click', (e) => {     
+        // Clicking on the map while a marker is selected will unselect the marker
+        // Clicking on the map while the context popup is shown will hide the popup
+        // Clicking on the map while no marker is selected or popup is shown will show the popup 
+        // Clicking on a marker will select the marker 
+        if(this.markerToSelect) {
+          this.selectMarker(this.markerToSelect)
+          this.markerToSelect = null
         } else {
-          if(this.contextPopup) {
-            this.hideContextMenu()
+          if(this.isMarkerSelected()) {
+            this.markerSelected.next(null)
+            this.unselectMarker()
           } else {
-            this.showContextPopup(e.lngLat)
+            if(this.contextPopup) {
+              this.hideContextMenu()
+            } else {
+              this.showContextPopup(e.lngLat)
+            }
           }
-        }
-      }    
+        }    
+      })
     })
+  }
+
+  
+
+  private addPOILayer() {
+    this.map.addLayer({
+      'id': 'poi',
+      'type': 'circle',
+      'source': {
+          'type': 'vector',
+          'tiles': this.quality.getPoiUrl(),
+          'minzoom': 9
+      },
+      'source-layer': 'poi',
+      'paint': {
+          'circle-radius': ['+', 3, ['sqrt', ['get', 'numOfPois']]],
+          'circle-color': [
+              'case',
+              ['!=', ['get', 'edgeWeight'], null],
+              [
+                  "interpolate-lab",
+                  ['exponential', 1],
+                  ['get', 'edgeWeight'],
+                  0, 'hsl(120,70%,50%)',
+                  this.quality.maxTravel/2, 'hsl(60,70%,50%)',
+                  this.quality.maxTravel, 'hsl(0,70%,50%)'
+              ],
+              '#666'
+          ]
+      }
+    });
+    // Change the cursor to a pointer when the mouse is over the poi layer
+    this.map.on("mouseenter", "poi", () => {
+      this.map.getCanvas().style.cursor = "pointer";
+    });
+
+    // Change it back to a pointer when it leaves.
+    this.map.on("mouseleave", "poi", () => {
+        this.map.getCanvas().style.cursor = "";
+    });
   }
 
   private hideContextMenu() {
@@ -188,9 +234,24 @@ export class MapService {
     
   }
 
-  updateMap() {
+  async updateMap() {
     //this.mapLoading.show()
+    const poiReachabilityUuid = await this.quality.registerNewRequest(this.getMarkersLocations());
+    const mapSource: any = this.map.getSource('poi')
+    
+    mapSource.tiles = this.quality.getPoiUrl(poiReachabilityUuid);
     this.markersUpdated.next(this.getMarkersLocations())
+
+    const sourceCache = (this.map as any).style.sourceCaches['poi'];
+    // Force a refresh, so that the map will be repainted without you having to touch the map
+    if(sourceCache != null) {
+      console.log("ASd");
+      
+      (this.map as any).style.sourceCaches['poi'].clearTiles();
+      (this.map as any).style.sourceCaches['poi'].update((this.map as any).transform);
+      
+    }
+    this.map.triggerRepaint();
     //this.mapLoading.hide()
   }
 

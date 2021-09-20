@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
+import { Marker } from 'mapbox-gl'
 import { client } from './global'
 
 
@@ -23,7 +24,7 @@ export class QualityRequest {
       ]
    poiHierarchy: PoiHierarchy
 
-   poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
+   private poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
       POITypes.forEach(POIType => {
          if(POIType.contents) {
@@ -43,7 +44,7 @@ export class QualityRequest {
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-         this.poiTypesToOSMTypes(this.selectedPOITypes).forEach(osmType => {
+         this.getOsmTypes().forEach(osmType => {
             requestOptions[osmType.value] = {
                type: 'poiCoverageCount',
                osmTypes: [osmType],
@@ -70,6 +71,34 @@ export class QualityRequest {
          this.poiHierarchy = response
       })
       
+   }
+
+   // register the initial reachability context request
+   uuid = ''
+   async registerInitialRequest(locations: LatLngId[]){
+      this.uuid = await this.registerNewRequest(locations);
+   }
+
+   async registerNewRequest(locations: LatLngId[]) {
+      let osmTypes = this.getOsmTypes()
+      const options = {
+          maxEdgeWeight: this.maxTravel,
+          travelType: this.travelMode,
+          edgeWeight: this.edgeWeight,
+          osmTypes: osmTypes
+      }
+      // register a new reachability context and return its uuid
+      const uuid = await client.pois.reachabilityRegister(locations, options);
+      return uuid;
+   }
+
+   getPoiUrl()
+   getPoiUrl(uuid: string)
+
+   getPoiUrl(uuid?: string) {
+      if(!uuid) {uuid = this.uuid}
+      return [`https://api.targomo.com/pointofinterest/reachability/${uuid}/{z}/{x}/{y}.mvt?apiKey=${client.serviceKey}` +
+               `&loadAllTags=true&layerType=node`];
    }
 
 }
