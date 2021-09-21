@@ -3,7 +3,6 @@
     <div [ngClass]="{'modal-inner': isModalOrDialog=='modal', 'dialog-inner': isModalOrDialog=='dialog'}">
         <header class="modal-header" *ngIf="showHeader">
             {{ name }}
-            <button class="close-modal" aria-label="close modal" (click)="onClose()">✕</button>
         </header>
         <ng-content></ng-content>
 

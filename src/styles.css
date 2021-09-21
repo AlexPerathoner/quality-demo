@@ -272,6 +272,16 @@ canvas {
   color: var(--selected);
 }
 
+.cancel-button {
+  background-color: white !important;
+  color: var(--selected) !important;
+  margin-right: 1rem;
+}
+.cancel-button:hover {
+  background-color: var(--hover) !important;
+  color: var(--selected) !important;
+}
+
 .clickable {
   cursor: pointer;
 }
