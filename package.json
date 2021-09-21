@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
     "@targomo/core": "^0.5.4",
+    "@targomo/ng": "^6.2.5",
     "@types/mapbox-gl": "^2.4.1",
     "mapbox-gl": "1.13.x",
     "rxjs": "~6.6.0",
