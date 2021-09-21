@@ -64,14 +64,13 @@ export class LocationWidgetComponent implements OnInit {
       const min = Math.min(...scores)
       const diff = max-min
       scoredLocations.forEach(location => {
-        let normalized = 0
+        let normalized = 1
         if(diff != 0) {
           normalized = (location.scores[osmType.key+"-"+osmType.value]-min)/diff 
         }
         location.scores[osmType.key+"-"+osmType.value+"-normalized"] = normalized // Keeping absolute score, saving normalized in new property
       })
     })
-    console.log(scoredLocations)
     return scoredLocations
   }
 
