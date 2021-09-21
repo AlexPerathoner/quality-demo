@@ -11,7 +11,7 @@ export class PoiAccordionComponent {
 
   @Input() poiList: PoiType[]
 
-  constructor(private poiTypeService: PoiTypesService) { }
+  constructor(private poiTypesService: PoiTypesService) { }
 
   onClick(event, poiId) {
     this.handleSelectedPoiChanges(event.checked, poiId)
@@ -21,9 +21,9 @@ export class PoiAccordionComponent {
     const poi = this.getChildById(this.poiList, id)
     
     if(add) {
-      this.poiTypeService.addPoiType(poi)
+      this.poiTypesService.addPoiType(poi)
     } else {
-      this.poiTypeService.removePoiType(poi)
+      this.poiTypesService.removePoiType(poi)
     }
   }
 
