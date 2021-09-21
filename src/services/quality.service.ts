@@ -23,6 +23,17 @@ export class QualityService {
       ]
    poiHierarchy: PoiHierarchy
 
+   fakePoi: PoiHierarchy = [
+      {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
+         [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
+         {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
+         {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
+      {"id":"g_eat-out2","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
+         [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
+         {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
+         {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]}
+      ]
+
    poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
       POITypes.forEach(POIType => {
