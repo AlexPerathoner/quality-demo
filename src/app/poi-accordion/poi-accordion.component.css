@@ -15,6 +15,10 @@
     background-color: var(--selected);;
 }
 
+::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: var(--selected);;
+}
+
 .group-title {
     padding-left: 1rem;
 }

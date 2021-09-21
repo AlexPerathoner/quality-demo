@@ -1,18 +1,17 @@
 <mat-accordion>
-    <div *ngFor="let poi of poiList">
+    <div *ngFor="let poi of poiList; let parentIndex = index">
         <div *ngIf="poi.type == 'TAG'">
             <span>
-            <p></p><mat-checkbox [checked]="allChecked" (change)="onClick($event)">{{ poi.name }}</mat-checkbox><!-- single -->
-        </span>
+                <mat-checkbox (change)="onClick($event, poi.id)">{{ poi.name }}</mat-checkbox><!-- single -->
+            </span>
         </div>
         <mat-expansion-panel *ngIf="poi.type != 'TAG'">
-            
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <mat-checkbox [checked]="checked['poi.id'] || allChecked" (change)="onGroupClicked(poi.id)"></mat-checkbox><span class="group-title">{{ poi.name }}</span><!-- group -->
+                    <span class="group-title">{{ poi.name }}</span><!-- group -->
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <poi-accordion [poiList]='poi.contents' [allChecked]="checked['poi.id'] || allChecked"></poi-accordion>
+            <poi-accordion [poiList]='poi.contents'></poi-accordion>
         </mat-expansion-panel>
     </div>
 </mat-accordion>
