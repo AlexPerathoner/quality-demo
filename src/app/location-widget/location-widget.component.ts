@@ -28,29 +28,6 @@ export class LocationWidgetComponent implements OnInit {
     ref.detach()
   }
 
-  showRelativeScores() {
-    this.useAbsoluteScores = false
-    this.relativeBtn.nativeElement.classList.add('selected-button')
-    this.absoluteBtn.nativeElement.classList.remove('selected-button')
-    this.toggleScoringSystem()
-  }
-  showAbsoluteScores() {
-    this.useAbsoluteScores = true
-    this.absoluteBtn.nativeElement.classList.add('selected-button')
-    this.relativeBtn.nativeElement.classList.remove('selected-button')
-    this.toggleScoringSystem()
-  }
-
-  public async toggleScoringSystem() {
-    
-    this.locations.forEach((elem) => { // Immediately putting empty data
-      elem.scores.stats = null
-    })
-    
-    this.ref.detectChanges() // Immediately updating toggle btn
-    this.updateLocations() // Asynchronously updating data
-  }
-
   ngOnInit(): void {
     this.updateLocations()
     this.map.getMarkerUpdateListener()
@@ -82,14 +59,19 @@ export class LocationWidgetComponent implements OnInit {
   private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
     // Normalizing scores for each criterion
     Object.values(this.quality.getOsmTypes()).forEach(osmType => {
-      const scores = scoredLocations.map(k => k.scores[osmType.value])
+      const scores = scoredLocations.map(k => k.scores[osmType.key+"-"+osmType.value])
       const max = Math.max(...scores)
       const min = Math.min(...scores)
       const diff = max-min
       scoredLocations.forEach(location => {
-        location.scores[osmType.value+"-normalized"] = (location.scores[osmType.value]-min)/diff // Keeping absolute score, saving normalized in new property
+        let normalized = 0
+        if(diff != 0) {
+          normalized = (location.scores[osmType.key+"-"+osmType.value]-min)/diff 
+        }
+        location.scores[osmType.key+"-"+osmType.value+"-normalized"] = normalized // Keeping absolute score, saving normalized in new property
       })
     })
+    console.log(scoredLocations)
     return scoredLocations
   }
 

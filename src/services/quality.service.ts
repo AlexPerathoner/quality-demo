@@ -43,14 +43,13 @@ export class QualityService {
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-         this.poiTypesToOSMTypes(this.selectedPOITypes).forEach(osmType => {
-            requestOptions[osmType.value] = {
-               type: 'poiCoverageCount',
-               osmTypes: [osmType],
-               maxEdgeWeight: this.maxTravel,
-               edgeWeight: this.edgeWeight,
-               travelMode: {[this.travelMode]: {}
-            } as TravelMode,
+      this.poiTypesToOSMTypes(this.selectedPOITypes).forEach(osmType => {
+         requestOptions[osmType.key+"-"+osmType.value] = {
+            type: 'poiCoverageCount',
+            osmTypes: [osmType],
+            maxEdgeWeight: this.maxTravel,
+            edgeWeight: this.edgeWeight,
+            travelMode: {[this.travelMode]: {}} as TravelMode,
             coreServiceUrl: this.coreServiceUrl
          }
       })
