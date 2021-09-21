@@ -137,13 +137,12 @@ export class LocationWidgetComponent implements OnInit {
 
   onLocationClicked(markerId: number) {
     this.map.selectMarker(markerId)
-    this.selectMarker(markerId)
   }
 
   selectMarker(markerId: number) {
     this.selectedLocationId = markerId
-    this.ref.detectChanges()
-    this.selectedMarker.emit(this.locations.find(e => e.id == markerId))    
+    this.selectedMarker.emit(this.locations.find(e => e.id == markerId))
+    this.ref.detectChanges()  
   }
 
   deleteMarker(id) {
