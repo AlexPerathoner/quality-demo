@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PoiType } from '@targomo/core';
-import { MapService } from 'services/map.service';
-import { QualityService } from 'services/quality.service';
+import { PoiTypesService } from 'services/poi-types.service';
 
 @Component({
   selector: 'poi-accordion',
@@ -12,7 +11,7 @@ export class PoiAccordionComponent {
 
   @Input() poiList: PoiType[]
 
-  constructor(private map: MapService, private qualityService: QualityService) { }
+  constructor(private poiTypeService: PoiTypesService) { }
 
   onClick(event, poiId) {
     this.handleSelectedPoiChanges(event.checked, poiId)
@@ -22,11 +21,10 @@ export class PoiAccordionComponent {
     const poi = this.getChildById(this.poiList, id)
     
     if(add) {
-      this.qualityService.addPoiType(poi)
+      this.poiTypeService.addPoiType(poi)
     } else {
-      this.qualityService.removePoiType(poi)
+      this.poiTypeService.removePoiType(poi)
     }
-    this.map.updateMap()
   }
 
   getChildById(arr: PoiType[], id: string): PoiType {

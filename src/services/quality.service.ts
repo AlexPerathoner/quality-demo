@@ -22,17 +22,6 @@ export class QualityService {
       {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
    ]
    poiHierarchy: PoiHierarchy
-   
-   addPoiType(poi: PoiType) {
-      this.selectedPOITypes.push(poi)
-   }
-
-   removePoiType(poi: PoiType) {
-      const index = this.selectedPOITypes.indexOf(poi)
-      if(index > -1) {
-         this.selectedPOITypes.splice(index, 1)
-      }
-   }
 
    poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
