@@ -19,7 +19,7 @@ export class SettingsViewComponent {
     constructor(private map: MapService, public qualityService: QualityService, private poiTypesService: PoiTypesService) {
       this.temporaryMaxTravel = qualityService.maxTravel
       this.temporaryTravelMode = qualityService.travelMode
-      this.poiTypesService.selectedPOITypes = qualityService.selectedPOITypes
+      this.poiTypesService.selectedPOITypes = [...qualityService.selectedPOITypes]
     }
 
     temporaryTravelMode: TravelType
@@ -37,7 +37,7 @@ export class SettingsViewComponent {
     onSave() {
       this.qualityService.travelMode = this.temporaryTravelMode
       this.qualityService.maxTravel = this.temporaryMaxTravel
-      this.qualityService.selectedPOITypes = this.poiTypesService.selectedPOITypes
+      this.qualityService.selectedPOITypes = [...this.poiTypesService.selectedPOITypes]
       
       this.map.updateMap()
       this.onClose()
