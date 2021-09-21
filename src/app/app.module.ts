@@ -27,6 +27,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { PoiAccordionComponent } from './poi-accordion/poi-accordion.component'; 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TgmPoiTreeModule } from '@targomo/ng/poi-tree'
+import { PoiTreeModule } from '../lib/poi-tree/poi-tree.module'
+
 
 @NgModule({
   declarations: [
@@ -58,6 +61,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatExpansionModule,
     MatTooltipModule,
     MatCheckboxModule,
+    PoiTreeModule,
   ],
   providers: [DynamicComponentService],
   bootstrap: [AppComponent]

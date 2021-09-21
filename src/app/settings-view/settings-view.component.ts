@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TravelType } from '@targomo/core';
+import { PoiType, TravelType } from '@targomo/core';
 import { MapService } from 'services/map.service';
 import { PoiTypesService } from 'services/poi-types.service';
 import { QualityService } from 'services/quality.service';
@@ -16,7 +16,7 @@ export class SettingsViewComponent {
       this.closeClicked.emit("")
     }
 
-    constructor(private map: MapService, public qualityService: QualityService, private poiTypesService: PoiTypesService) {
+    constructor(private map: MapService, public qualityService: QualityService, public poiTypesService: PoiTypesService) {
       this.temporaryMaxTravel = qualityService.maxTravel
       this.temporaryTravelMode = qualityService.travelMode
       this.poiTypesService.selectedPOITypes = [...qualityService.selectedPOITypes]
@@ -32,6 +32,11 @@ export class SettingsViewComponent {
     onMaxTravelChanged(event) {
       this.temporaryMaxTravel = event.value
       this.map.updateMap()
+    }
+
+    updateSelectedPoiTypes(selectedPoiTypes: PoiType[]) {
+      console.log("Changed" + selectedPoiTypes.length);
+      
     }
 
     onSave() {

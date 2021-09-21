@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
+import { Subject } from 'rxjs'
 import { client } from './global'
 
 
@@ -22,6 +23,7 @@ export class QualityService {
       {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
    ]
    poiHierarchy: PoiHierarchy
+   hierarchyUpdated = new Subject<PoiType[]>()
 
    poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
@@ -38,6 +40,10 @@ export class QualityService {
 
    getOsmTypes(): OSMType[] {
       return this.poiTypesToOSMTypes(this.selectedPOITypes)
+   }
+
+   getHierarchyUpdateListener() {
+      return this.hierarchyUpdated.asObservable();
    }
 
 
@@ -67,6 +73,7 @@ export class QualityService {
    constructor() {
       client.pois.hierarchy().then(response => {
          this.poiHierarchy = response
+         this.hierarchyUpdated.next(this.poiHierarchy)
       })
       
    }

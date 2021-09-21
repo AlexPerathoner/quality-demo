@@ -20,9 +20,10 @@
     <div>
         <div class="option" style="width: 100%;">
             <span class="subtitle">Selected POIs:</span>
-            <div class="pois-container">
-                <poi-accordion [poiList]='this.qualityService.poiHierarchy'></poi-accordion>
-            </div>
+            <tgm-poi-tree
+                [alreadySelectedNodes]="this.poiTypesService.selectedPOITypes"
+                (poiTypeSelected)="updateSelectedPoiTypes($event)">
+            </tgm-poi-tree>
         </div>
     </div>
     <div class="option" style="width: 100%;">
