@@ -14,7 +14,7 @@
         <div class="option" style="margin-right: auto; margin-left: auto;">
             <span class="subtitle">Maximum Travel Time:</span>
             <mat-slider min="60" max="1800" step="60" value="1800" (change)="onMaxTravelChanged($event)"></mat-slider>
-            <span style="padding-left: 1rem;">{{ temporaryMaxTravel/60 | number:'1.0-0' }} minutes</span>
+            <span style="padding-left: 1rem; line-height: 24px; font-size: 14px; font-weight: 400;">{{ temporaryMaxTravel/60 | number:'1.0-0' }} minutes</span>
         </div>
     </div>
     <div>
