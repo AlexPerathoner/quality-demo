@@ -78,7 +78,7 @@ export class MapService {
       {lng: 0.0481, lat: 51.5157, id: 4},
       {lng: -0.0103, lat: 51.4914, id: 5}
     ]
-    this.quality.registerInitialRequest(startLocations)
+    this.qualityService.registerInitialRequest(startLocations)
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
       return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
     }))
@@ -132,7 +132,7 @@ export class MapService {
       'type': 'circle',
       'source': {
           'type': 'vector',
-          'tiles': this.quality.getPoiUrl(),
+          'tiles': this.qualityService.getPoiUrl(),
           'minzoom': 9
       },
       'source-layer': 'poi',
@@ -146,8 +146,8 @@ export class MapService {
                   ['exponential', 1],
                   ['get', 'edgeWeight'],
                   0, 'hsl(120,70%,50%)',
-                  this.quality.maxTravel/2, 'hsl(60,70%,50%)',
-                  this.quality.maxTravel, 'hsl(0,70%,50%)'
+                  this.qualityService.maxTravel/2, 'hsl(60,70%,50%)',
+                  this.qualityService.maxTravel, 'hsl(0,70%,50%)'
               ],
               '#666'
           ]
@@ -243,10 +243,10 @@ export class MapService {
 
   async updateMap() {
     //this.mapLoading.show()
-    const poiReachabilityUuid = await this.quality.registerNewRequest(this.getMarkersLocations());
+    const poiReachabilityUuid = await this.qualityService.registerNewRequest(this.getMarkersLocations());
     const mapSource: any = this.map.getSource('poi')
     
-    mapSource.tiles = this.quality.getPoiUrl(poiReachabilityUuid);
+    mapSource.tiles = this.qualityService.getPoiUrl(poiReachabilityUuid);
     this.markersUpdated.next(this.getMarkersLocations())
 
     const sourceCache = (this.map as any).style.sourceCaches['poi'];
