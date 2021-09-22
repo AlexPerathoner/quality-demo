@@ -64,11 +64,11 @@ export class MapService {
     this.sourceMarkers = []
 
     const startLocations: LatLngId[] = [
-      {lng: -0.075, lat: 51.51, id: 1},
-      {lng: -0.05, lat: 51.51, id: 2},
+      {lng: -0.0652, lat: 51.5238, id: 1},
+      {lng: -0.0753, lat: 51.5098, id: 2},
       {lng: -0.025, lat: 51.51, id: 3},
-      {lng: 0, lat: 51.51, id: 4},
-      {lng: 0.025, lat: 51.51, id: 5}
+      {lng: 0.0481, lat: 51.5157, id: 4},
+      {lng: -0.0103, lat: 51.4914, id: 5}
     ]
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
       return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
@@ -82,7 +82,7 @@ export class MapService {
       container: 'map',
       style: this.style,
       zoom: 12,
-      center: [-0.025,51.51626]
+      center: [-0.025,51.506]
     })
     this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left')
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
