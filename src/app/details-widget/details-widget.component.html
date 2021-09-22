@@ -8,7 +8,7 @@
                 <th>Score</th>
             </tr>
         </thead>
-        <tr *ngFor="let POIType of this.quality.selectedPOITypes">
+        <tr *ngFor="let POIType of this.quality.selectedPoiTypes">
             <td class="row-title">{{ POIType.name }}:</td>
             <!-- Groups -->
             <td class="score" *ngIf="POIType.contents">{{ this.location.scores['group-'+POIType.id] }}</td>

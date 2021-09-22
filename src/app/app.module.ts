@@ -24,10 +24,8 @@ import { OptionBtnComponent } from './option-btn/option-btn.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { ModalComponent } from './modal/modal.component';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { PoiAccordionComponent } from './poi-accordion/poi-accordion.component'; 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TgmPoiTreeModule } from '@targomo/ng/poi-tree'
 import { PoiTreeModule } from '../lib/poi-tree/poi-tree.module'
 
 
@@ -47,7 +45,6 @@ import { PoiTreeModule } from '../lib/poi-tree/poi-tree.module'
     ProgressCircleComponent,
     OptionBtnComponent,
     ModalComponent,
-    PoiAccordionComponent,
   ],
   imports: [
     BrowserModule,

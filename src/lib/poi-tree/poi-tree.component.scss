@@ -1,4 +1,3 @@
-@import 'mixins';
 
 :host {
   .filtered {
@@ -15,7 +14,6 @@
     mat-tree-node.mat-tree-node {
       min-height: 38px;
       max-height: 38px;
-      @include tgm-small-text();
       color: #00242B;
     }
   }

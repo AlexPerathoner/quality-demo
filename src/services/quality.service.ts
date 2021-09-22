@@ -15,7 +15,7 @@ export class QualityService {
    separateScores = true
 
    // Will be retrieved from the settings panel, which gets them using the poi hierarchy 
-   selectedPOITypes: PoiType[] = [
+   selectedPoiTypes: PoiType[] = [
       {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
          [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
          {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
@@ -39,7 +39,7 @@ export class QualityService {
    }
 
    getOsmTypes(): OSMType[] {
-      return this.poiTypesToOSMTypes(this.selectedPOITypes)
+      return this.poiTypesToOSMTypes(this.selectedPoiTypes)
    }
 
    getHierarchyUpdateListener() {
@@ -49,7 +49,7 @@ export class QualityService {
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-      this.poiTypesToOSMTypes(this.selectedPOITypes).forEach(osmType => {
+      this.poiTypesToOSMTypes(this.selectedPoiTypes).forEach(osmType => {
          requestOptions[osmType.key+"-"+osmType.value] = {
             type: 'poiCoverageCount',
             osmTypes: [osmType],
