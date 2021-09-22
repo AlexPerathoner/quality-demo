@@ -5,6 +5,7 @@
     "ng": "ng",
     "config": "ts-node ./src/assets/scripts/setenv.ts",
     "start": "npm run config -- --environment=dev && ng serve",
+    "serve-old-config": "ng serve",
     "build": "npm run config -- --environment=prod && ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "./node_modules/.bin/eslint ./src/app/**/*.ts",
