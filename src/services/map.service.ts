@@ -185,7 +185,7 @@ export class MapService {
                   this.clientOption.maxTravel/2, 'hsl(60,70%,50%)',
                   this.clientOption.maxTravel, 'hsl(0,70%,50%)'
               ],
-              '#666'
+              'rgba(0,0,0,0)'
           ]
       }
     });
