@@ -9,6 +9,8 @@ import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
 import { LocationNamesService } from './location-names.service'
 import { QualityService } from './quality.service'
+import { PoiService } from './poi.service'
+import { ClientOptionService } from './client-option.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -26,7 +28,14 @@ export class MapService {
   private markersUpdated = new Subject<NamedLatLngId[]>()
   private markerSelected = new Subject<NamedMarker>()
   
-  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, private qualityService: QualityService, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(
+    private dynamicComponentService: DynamicComponentService,
+    private reverseGeocoding: LocationNamesService,
+    private qualityService: QualityService,
+    private poiService: PoiService,
+    private clientOption: ClientOptionService,
+    @Optional() @SkipSelf() sharedService?: MapService)
+  {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -46,7 +55,7 @@ export class MapService {
     // Reset zoom
     this.map.setZoom(12)
     this.resetMarkers()
-    this.qualityService.selectedPoiTypes = [
+    this.clientOption.selectedPoiTypes = [
       {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
          [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
          {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
@@ -79,7 +88,7 @@ export class MapService {
       {lng: 0.0481, lat: 51.5157, id: 4},
       {lng: -0.0103, lat: 51.4914, id: 5}
     ]
-    this.qualityService.registerInitialRequest(startLocations)
+    this.poiService.registerInitialRequest(startLocations)
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
       return {...loc, name: (await this.reverseGeocoding.getNameOfLocation({lat: loc.lat, lng: loc.lng}))[0]}
     }))
@@ -125,7 +134,8 @@ export class MapService {
     })
   }
 
-  showPoiLayer(): void {
+  showPoiLayer(location: LatLngId): void {
+    
     this.map.setLayoutProperty(this.layerId, 'visibility', 'visible');
   }
 
@@ -139,7 +149,7 @@ export class MapService {
       'type': 'circle',
       'source': {
           'type': 'vector',
-          'tiles': this.qualityService.getPoiUrl(),
+          'tiles': this.poiService.getPoiUrl(),
           'minzoom': 9
       },
       'layout': {
@@ -156,8 +166,8 @@ export class MapService {
                   ['exponential', 1],
                   ['get', 'edgeWeight'],
                   0, 'hsl(120,70%,50%)',
-                  this.qualityService.maxTravel/2, 'hsl(60,70%,50%)',
-                  this.qualityService.maxTravel, 'hsl(0,70%,50%)'
+                  this.clientOption.maxTravel/2, 'hsl(60,70%,50%)',
+                  this.clientOption.maxTravel, 'hsl(0,70%,50%)'
               ],
               '#666'
           ]
@@ -253,10 +263,10 @@ export class MapService {
 
   async updateMap() {
     //this.mapLoading.show()
-    const poiReachabilityUuid = await this.qualityService.registerNewRequest(this.getMarkersLocations());
+    const poiReachabilityUuid = await this.poiService.registerNewRequest(this.getMarkersLocations());
     const mapSource: any = this.map.getSource('poi')
     
-    mapSource.tiles = this.qualityService.getPoiUrl(poiReachabilityUuid);
+    mapSource.tiles = this.poiService.getPoiUrl(poiReachabilityUuid);
     this.markersUpdated.next(this.getMarkersLocations())
 
     const sourceCache = (this.map as any).style.sourceCaches['poi'];

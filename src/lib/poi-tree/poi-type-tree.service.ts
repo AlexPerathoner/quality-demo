@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
 import { PoiType } from '@targomo/core'
-import { QualityService } from 'services/quality.service'
+import { ClientOptionService } from 'services/client-option.service'
 
 /**
  * Node for to-do item
@@ -28,8 +28,8 @@ export class ChecklistDatabase {
     return this.dataChange.value
   }
 
-  constructor(private qualityService: QualityService) {
-    qualityService.getHierarchyUpdateListener().subscribe(hierarchy => {
+  constructor(private clientOption: ClientOptionService) {
+    clientOption.getHierarchyUpdateListener().subscribe(hierarchy => {
       const data = this.buildFileTree(hierarchy)
       this.dataChange.next(data)
     })

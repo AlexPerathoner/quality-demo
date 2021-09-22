@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core'
 import { NamedLatLngIdScores } from 'app/types/types'
-import { QualityService } from 'services/quality.service'
+import { ClientOptionService } from 'services/client-option.service'
 
 @Component({
   selector: 'app-details-widget',
@@ -10,6 +10,6 @@ import { QualityService } from 'services/quality.service'
 export class DetailsWidgetComponent {
   @Input() location: NamedLatLngIdScores
 
-  constructor(public qualityService: QualityService) { }
+  constructor(public clientOption: ClientOptionService) { }
 
 }

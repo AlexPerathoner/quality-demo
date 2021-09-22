@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Injectable, OnInit, Output, ViewChild } from '@angular/core'
 import { LatLngIdScores } from '@targomo/core'
 import { NamedLatLngId, NamedLatLngIdScores, NamedMarker } from 'app/types/types'
+import { ClientOptionService } from 'services/client-option.service'
 import { MapService } from 'services/map.service'
 import { QualityService } from 'services/quality.service'
 
@@ -23,7 +24,11 @@ export class LocationWidgetComponent implements OnInit {
   @ViewChild('relativeBtn') relativeBtn;
   @ViewChild('absoluteBtn') absoluteBtn;
 
-  constructor(private mapService: MapService, private qualityService: QualityService, private ref: ChangeDetectorRef) {
+  constructor(private mapService: MapService,
+    private qualityService: QualityService,
+    private clientOption: ClientOptionService,
+    private ref: ChangeDetectorRef
+  ) {
     ref.detach()
   }
 
@@ -57,7 +62,7 @@ export class LocationWidgetComponent implements OnInit {
 
   private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
     // Normalizing scores for each criterion
-    Object.values(this.qualityService.getOsmTypes()).forEach(osmType => {
+    Object.values(this.clientOption.getOsmTypes()).forEach(osmType => {
       const scores = scoredLocations.map(k => k.scores[osmType.key+'-'+osmType.value])
       const max = Math.max(...scores)
       const min = Math.min(...scores)

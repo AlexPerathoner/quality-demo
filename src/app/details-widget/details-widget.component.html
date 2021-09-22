@@ -7,14 +7,14 @@
                 <th>Score</th>
             </tr>
         </thead>
-        <tr *ngFor="let POIType of this.qualityService.selectedPoiTypes">
-            <td class="row-title">{{ POIType.name }}:</td>
+        <tr *ngFor="let poiType of this.clientOption.selectedPoiTypes">
+            <td class="row-title">{{ poiType.name }}:</td>
             <!-- Groups -->
-            <td class="score" *ngIf="POIType.contents">{{ this.location.scores['group-'+POIType.id] }}</td>
-            <td class="progress-container" *ngIf="POIType.contents"><progress-circle [value]="this.location.scores['group-'+POIType.id+'-normalized']"></progress-circle></td>
+            <td class="score" *ngIf="poiType.contents">{{ this.location.scores['group-'+poiType.id] }}</td>
+            <td class="progress-container" *ngIf="poiType.contents"><progress-circle [value]="this.location.scores['group-'+poiType.id+'-normalized']"></progress-circle></td>
             <!-- Tags -->
-            <td class="score" *ngIf="!POIType.contents">{{ this.location.scores[POIType.key+'-'+POIType.value] }}</td>
-            <td class="progress-container" *ngIf="!POIType.contents"><progress-circle [value]="this.location.scores[POIType.key+'-'+POIType.value+'-normalized']"></progress-circle></td>
+            <td class="score" *ngIf="!poiType.contents">{{ this.location.scores[poiType.key+'-'+poiType.value] }}</td>
+            <td class="progress-container" *ngIf="!poiType.contents"><progress-circle [value]="this.location.scores[poiType.key+'-'+poiType.value+'-normalized']"></progress-circle></td>
         </tr>
         <tr class="total-row">
             <td class="row-title">Total:</td>

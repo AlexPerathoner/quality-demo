@@ -17,7 +17,7 @@ export class AppComponent {
   selectLocation(event) {
     this.selectedLocation = event
     if(event) {
-      this.mapService.showPoiLayer()
+      this.mapService.showPoiLayer(event)
     } else {
       this.mapService.hidePoiLayer()
     }
