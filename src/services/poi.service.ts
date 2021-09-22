@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { LatLngId } from '@targomo/core';
-import { ClientOptionService } from './client-option.service';
-import { client } from './global';
+import { Injectable } from '@angular/core'
+import { LatLngId } from '@targomo/core'
+import { ClientOptionService } from './client-option.service'
+import { client } from './global'
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,14 @@ export class PoiService {
 
   // register the initial reachability context request
   uuid = ''
-  async registerInitialRequest(locations: LatLngId[]){
-    this.uuid = await this.registerNewRequest(locations);
+  async registerInitialRequest(locations: LatLngId[]): Promise<void> {
+    this.uuid = await this.registerNewRequest(locations)
   }
 
-  async registerNewRequest(location: LatLngId[])
-  async registerNewRequest(location: LatLngId)
-  async registerNewRequest(location: LatLngId | LatLngId[]) {
-    let osmTypes = this.clientOption.getOsmTypes()
+  async registerNewRequest(location: LatLngId[]): Promise<string>
+  async registerNewRequest(location: LatLngId): Promise<string>
+  async registerNewRequest(location: LatLngId | LatLngId[]): Promise<string> {
+    const osmTypes = this.clientOption.getOsmTypes()
     const options = {
       maxEdgeWeight: this.clientOption.maxTravel,
       travelType: this.clientOption.travelMode,
@@ -33,16 +33,16 @@ export class PoiService {
     } else {
       sources = [location]
     }
-    const uuid = await client.pois.reachabilityRegister(sources, options);
-    return uuid;
+    const uuid = await client.pois.reachabilityRegister(sources, options)
+    return uuid
   }
 
-  getPoiUrl()
-  getPoiUrl(uuid: string)
-  getPoiUrl(uuid?: string) {
+  getPoiUrl(): string[]
+  getPoiUrl(uuid: string): string[]
+  getPoiUrl(uuid?: string): string[] {
     if(!uuid) {uuid = this.uuid}
     return [`https://api.targomo.com/pointofinterest/reachability/${uuid}/{z}/{x}/{y}.mvt?apiKey=${client.serviceKey}` +
-              `&loadAllTags=true&layerType=node`];
+              '&loadAllTags=true&layerType=node']
   }
 
 }

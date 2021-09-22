@@ -9,9 +9,9 @@ import { client } from './global'
 export class QualityService {
 
   private createRequestOptions(): QualityRequestOptions {
-    let requestOptions: QualityRequestOptions = {}
+    const requestOptions: QualityRequestOptions = {}
     this.clientOption.getOsmTypes().forEach(osmType => {
-      requestOptions[osmType.key + "-" + osmType.value] = {
+      requestOptions[osmType.key + '-' + osmType.value] = {
         type: 'poiCoverageCount',
         osmTypes: [osmType],
         maxEdgeWeight: this.clientOption.maxTravel,
@@ -25,7 +25,7 @@ export class QualityService {
   }
 
   async getScores(locations: LatLngId[]) {
-    let requestOptions: QualityRequestOptions = this.createRequestOptions()
+    const requestOptions: QualityRequestOptions = this.createRequestOptions()
     const results = await client.quality.fetch(locations, requestOptions)    
     return results.data
   }

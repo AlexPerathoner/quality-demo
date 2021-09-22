@@ -11,25 +11,25 @@ export class DynamicComponentService {
 
 
     public injectComponent<T>(component: Type<T>, propertySetter?: (type: T) => void): HTMLDivElement {
-        // Remove the Component if it Already Exists
-        if (this.compRef) this.compRef.destroy();
+      // Remove the Component if it Already Exists
+      if (this.compRef) this.compRef.destroy()
 
-        // Resolve the Component and Create
-        const compFactory = this.resolver.resolveComponentFactory(component);
-        this.compRef = compFactory.create(this.injector);
+      // Resolve the Component and Create
+      const compFactory = this.resolver.resolveComponentFactory(component)
+      this.compRef = compFactory.create(this.injector)
 
-        // Allow a Property Setter to be Passed in (To Set a Model Property, etc)
-        if (propertySetter)
-            propertySetter(this.compRef.instance);
+      // Allow a Property Setter to be Passed in (To Set a Model Property, etc)
+      if (propertySetter)
+        propertySetter(this.compRef.instance)
 
-        // Attach to Application
-        this.appRef.attachView(this.compRef.hostView);
+      // Attach to Application
+      this.appRef.attachView(this.compRef.hostView)
 
-        // Create Wrapper Div and Inject Html
-        let div = document.createElement('div');
-        div.appendChild(this.compRef.location.nativeElement);
+      // Create Wrapper Div and Inject Html
+      const div = document.createElement('div')
+      div.appendChild(this.compRef.location.nativeElement)
 
-        // Return the Rendered DOM Element
-        return div;
+      // Return the Rendered DOM Element
+      return div
     }
 }

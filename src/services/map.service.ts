@@ -1,8 +1,8 @@
 import { Injectable, Optional, SkipSelf } from '@angular/core'
 import * as mapboxgl from 'mapbox-gl'
-import { environment } from "../environments/environment"
+import { environment } from '../environments/environment'
 import { LatLng, LatLngId } from '@targomo/core'
-import { Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { NamedLatLngId, NamedMarker } from 'app/types/types'
 import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
@@ -36,34 +36,34 @@ export class MapService {
     @Optional() @SkipSelf() sharedService?: MapService)
   {
     if(sharedService) {
-      throw new Error("Map Service already loaded!")
+      throw new Error('Map Service already loaded!')
     }
-    console.info("Map Service created")
+    console.info('Map Service created')
   }
 
-  getMarkerUpdateListener() {
-    return this.markersUpdated.asObservable();
+  getMarkerUpdateListener(): Observable<NamedLatLngId[]> {
+    return this.markersUpdated.asObservable()
   }
-  getMarkerSelectionListener() {
-    return this.markerSelected.asObservable();
+  getMarkerSelectionListener(): Observable<NamedMarker>  {
+    return this.markerSelected.asObservable()
   }
 
-  reset() {
+  reset(): void {
     // Reset position
     this.map.setCenter([-0.025,51.51626])
     // Reset zoom
     this.map.setZoom(12)
     this.resetMarkers()
     this.clientOption.selectedPoiTypes = [
-      {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
-         [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
-         {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
-         {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
-      {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
+      {'id':'g_eat-out','name':'Gastronomy','description':'Restaurants and other places for eating out','type':'CATEGORY','contents':
+         [{'id':'fast_food','name':'Fast food','description':'Place concentrating on very fast counter-only service and take-away food','key':'amenity','value':'fast_food','type':'TAG'},
+           {'id':'food_court','name':'Food court','description':'Place with sit-down facilities shared by multiple self-service food vendors','key':'amenity','value':'food_court','type':'TAG'},
+           {'id':'restaurant','name':'Restaurant','description':'Place selling full sit-down meals with servers','key':'amenity','value':'restaurant','type':'TAG'}]},
+      {'id': 'cafe','name': 'Cafe','description': 'Place with sit-down facilities selling beverages and light meals and/or snacks','key': 'amenity','value': 'cafe','type': 'TAG'}
     ]
   }
 
-  removeMarker(markerId: number) {
+  removeMarker(markerId: number): void {
     const markerToDelete = this.sourceMarkers.find(marker => marker.id == markerId)
     markerToDelete.remove()
     const index = this.sourceMarkers.indexOf(markerToDelete)    
@@ -72,7 +72,7 @@ export class MapService {
     this.markerSelected.next()
   }
 
-  async resetMarkers() {
+  async resetMarkers(): Promise<void> {
     this.markerCount = 0
     for(let i=0; i<this.sourceMarkers.length; i++) {
       this.sourceMarkers[i].remove()
@@ -95,7 +95,7 @@ export class MapService {
     this.markersUpdated.next(namedStartLocations)
   }
   
-  buildMap() {
+  buildMap(): void {
     this.map = new mapboxgl.Map({
       container: 'map',
       style: this.style,
@@ -103,8 +103,8 @@ export class MapService {
       center: [-0.025,51.506]
     })
     this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left')
-    const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
-    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }),"bottom-left")
+    const attributionText = '<a href=\'//localhost:1313/resources/attribution/\' target=\'_blank\'>&copy; Targomo</a>'
+    this.map.addControl(new mapboxgl.AttributionControl({ compact: true, customAttribution: attributionText }),'bottom-left')
     this.resetMarkers()
     this.map.on('load', () => {
 
@@ -134,11 +134,11 @@ export class MapService {
   }
 
   showPoiLayer(): void {
-    this.map.setLayoutProperty(this.layerId, 'visibility', 'visible');
+    this.map.setLayoutProperty(this.layerId, 'visibility', 'visible')
   }
 
   hidePoiLayer(): void {
-    this.map.setLayoutProperty(this.layerId, 'visibility', 'none');
+    this.map.setLayoutProperty(this.layerId, 'visibility', 'none')
   }
 
   updatePoiLayerSource(): void {
@@ -146,17 +146,17 @@ export class MapService {
   }
 
   async changePoiLayerSource(location: LatLngId): Promise<void> {
-    const poiReachabilityUuid = await this.poiService.registerNewRequest(location);
-    const mapSource: any = this.map.getSource('poi')
-    mapSource.tiles = this.poiService.getPoiUrl(poiReachabilityUuid);
+    const poiReachabilityUuid = await this.poiService.registerNewRequest(location)
+    const mapSource: any = this.map.getSource('poi') // .tiles not accessible, storing as any
+    mapSource.tiles = this.poiService.getPoiUrl(poiReachabilityUuid)
 
-    const sourceCache = (this.map as any).style.sourceCaches['poi'];
+    const sourceCache = (this.map as any).style.sourceCaches['poi']
     // Force a refresh, so that the map will be repainted without you having to touch the map
     if(sourceCache != null) {
-      (this.map as any).style.sourceCaches['poi'].clearTiles();
-      (this.map as any).style.sourceCaches['poi'].update((this.map as any).transform);
+      (this.map as any).style.sourceCaches['poi'].clearTiles(); // .style not accessible, using as any
+      (this.map as any).style.sourceCaches['poi'].update((this.map as any).transform)
     }
-    this.map.triggerRepaint();
+    this.map.triggerRepaint()
   }
 
   private addPoiLayer(): void {
@@ -164,43 +164,43 @@ export class MapService {
       'id': this.layerId,
       'type': 'circle',
       'source': {
-          'type': 'vector',
-          'tiles': this.poiService.getPoiUrl(),
-          'minzoom': 9
+        'type': 'vector',
+        'tiles': this.poiService.getPoiUrl(),
+        'minzoom': 9
       },
       'layout': {
         'visibility': 'none'
       },
       'source-layer': 'poi',
       'paint': {
-          'circle-radius': ['+', 3, ['sqrt', ['get', 'numOfPois']]],
-          'circle-color': [
-              'case',
-              ['!=', ['get', 'edgeWeight'], null],
-              [
-                  "interpolate-lab",
-                  ['exponential', 1],
-                  ['get', 'edgeWeight'],
-                  0, 'hsl(120,70%,50%)',
-                  this.clientOption.maxTravel/2, 'hsl(60,70%,50%)',
-                  this.clientOption.maxTravel, 'hsl(0,70%,50%)'
-              ],
-              'rgba(0,0,0,0)'
-          ]
+        'circle-radius': ['+', 3, ['sqrt', ['get', 'numOfPois']]],
+        'circle-color': [
+          'case',
+          ['!=', ['get', 'edgeWeight'], null],
+          [
+            'interpolate-lab',
+            ['exponential', 1],
+            ['get', 'edgeWeight'],
+            0, 'hsl(120,70%,50%)',
+            this.clientOption.maxTravel/2, 'hsl(60,70%,50%)',
+            this.clientOption.maxTravel, 'hsl(0,70%,50%)'
+          ],
+          'rgba(0,0,0,0)'
+        ]
       }
-    });
+    })
     // Change the cursor to a pointer when the mouse is over the poi layer
-    this.map.on("mouseenter", "poi", () => {
-      this.map.getCanvas().style.cursor = "pointer";
-    });
+    this.map.on('mouseenter', 'poi', () => {
+      this.map.getCanvas().style.cursor = 'pointer'
+    })
 
     // Change it back to a pointer when it leaves.
-    this.map.on("mouseleave", "poi", () => {
-        this.map.getCanvas().style.cursor = "";
-    });
+    this.map.on('mouseleave', 'poi', () => {
+      this.map.getCanvas().style.cursor = ''
+    })
   }
 
-  private hideContextMenu() {
+  private hideContextMenu(): void {
     this.hideTemporaryMarker()
     if(this.contextPopup) {
       this.contextPopup.remove()
@@ -208,35 +208,36 @@ export class MapService {
     }
   }
 
-  private async showContextPopup(lngLat: mapboxgl.LngLat) {
-    this.showTemporaryMarker("", lngLat)
-    let [title1, title2] = await this.reverseGeocoding.getNameOfLocation(lngLat)
-    let popupContent = this.dynamicComponentService.injectComponent(
+  private async showContextPopup(lngLat: mapboxgl.LngLat): Promise<void> {
+    this.showTemporaryMarker('', lngLat)
+    const [title1, title2] = await this.reverseGeocoding.getNameOfLocation(lngLat)
+    const popupContent = this.dynamicComponentService.injectComponent(
       PopupComponent,
-      x => x.model = new PopupModel(title1, title2, "Add marker", () => {
+      x => x.model = new PopupModel(title1, title2, 'Add marker', () => {
         this.hideContextMenu()
         this.addMarker(title1, lngLat)
-      }, this.sourceMarkers.length < 30, "Too many locations: 30 allowed."));
+      }, this.sourceMarkers.length < 30, 'Too many locations: 30 allowed.'))
     
     const offset: mapboxgl.PointLike = [175, 75]
     this.contextPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: true, offset: offset })
       .setLngLat(lngLat) 
       .setDOMContent(popupContent)
-      .addTo(this.map);
+      .addTo(this.map)
   }
 
-  private createMarker() {
-    const el = document.createElement('div');
-    el.className = 'marker-dot';
+  private createMarker(): HTMLDivElement {
+    const el = document.createElement('div')
+    el.className = 'marker-dot'
     return el
   }
  
-  private createTemporaryMarker() {
-    const el = document.createElement('div');
-    el.className = 'temporary-marker-dot';
+  private createTemporaryMarker(): HTMLDivElement {
+    const el = document.createElement('div')
+    el.className = 'temporary-marker-dot'
     return el
   }
-  private showTemporaryMarker(name: string, latLng: LatLng) {
+
+  private showTemporaryMarker(name: string, latLng: LatLng): void {
     this.hideTemporaryMarker()
     const el = this.createTemporaryMarker()
     this.temporaryMarker = new mapboxgl.Marker(el, {
@@ -244,14 +245,15 @@ export class MapService {
     })
     this.temporaryMarker.setLngLat(latLng).addTo(this.map)
   }
-  private hideTemporaryMarker() {
+
+  private hideTemporaryMarker(): void {
     if(this.temporaryMarker) {
       this.temporaryMarker.remove()
     }
   }
 
   private markerCount = 0
-  private silentlyAddMarker(markerName: string, latLng: LatLng) {
+  private silentlyAddMarker(markerName: string, latLng: LatLng): void {
     const markerId = this.markerCount++ +1
     const el = this.createMarker()
     const marker = new NamedMarker(el, {
@@ -272,14 +274,14 @@ export class MapService {
     this.sourceMarkers.push(marker)
   }
   
-  addMarker(markerName: string, latLng: LatLng) {
+  addMarker(markerName: string, latLng: LatLng): void {
     this.silentlyAddMarker(markerName, latLng)
     this.updateMap()
   }
 
-  async updateMap() {
+  async updateMap(): Promise<void> {
     //this.mapLoading.show()
-    let locations = this.getMarkersLocations()
+    const locations = this.getMarkersLocations()
     this.markersUpdated.next(locations)
     this.updatePoiLayerSource()
     //this.mapLoading.hide()
@@ -294,12 +296,12 @@ export class MapService {
     return null
   }
 
-  selectMarker(markerId: number) {
+  selectMarker(markerId: number): void {
     this.unselectMarker() // Unselecting previously selected marker
     const markerFeature: NamedMarker = this.getMarker(markerId) // Getting marker to select 
     this.selectedMarker = markerFeature
     this.markerSelected.next(markerFeature) // Sending subject to other classes
-    markerFeature.getElement().id = "selected-marker" // Setting id to current marker to update style
+    markerFeature.getElement().id = 'selected-marker' // Setting id to current marker to update style
     this.hideContextMenu()
     this.flyTo(markerFeature)
 
@@ -315,14 +317,14 @@ export class MapService {
     return document.getElementById('selected-marker')
   }
 
-  unselectMarker() {
+  unselectMarker(): void {
     const oldSelectedMarker = this.getSelectedMarker() // Removing id from previous marker, updates style
-    if(oldSelectedMarker) {oldSelectedMarker.id = ""}
+    if(oldSelectedMarker) {oldSelectedMarker.id = ''}
     this.selectedMarker = null
     this.hidePoiLayer()
   }
 
-  flyTo(feature: mapboxgl.Marker) {
+  flyTo(feature: mapboxgl.Marker): void {
     let selectionZoom = 13
     if(this.map.getZoom() > selectionZoom) {
       selectionZoom = this.map.getZoom()
@@ -330,14 +332,14 @@ export class MapService {
     this.map.flyTo({
       center: feature.getLngLat(),
       zoom: selectionZoom
-    });
+    })
     
   }
 
   getMarkersLocations(): NamedLatLngId[] {
-    let locations: NamedLatLngId[] = []
+    const locations: NamedLatLngId[] = []
     this.sourceMarkers.forEach((marker, index) => {
-        locations[index] = { ... marker.getLngLat(), id: marker.id, name: marker.name}
+      locations[index] = { ... marker.getLngLat(), id: marker.id, name: marker.name}
     })
     return locations
   }

@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { MapService } from 'services/map.service';
-import { NamedLatLngIdScores } from './types/types';
+import { Component } from '@angular/core'
+import { NamedLatLngIdScores } from './types/types'
 
 @Component({
   selector: 'app-root',
@@ -12,9 +11,7 @@ export class AppComponent {
   settingsModalIsVisible = false
   selectedLocation: NamedLatLngIdScores
 
-  constructor() { }
-
-  selectLocation(event) {
+  selectLocation(event: NamedLatLngIdScores): void {
     this.selectedLocation = event
   }
   
