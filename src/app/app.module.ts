@@ -21,6 +21,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { DetailsWidgetComponent } from './details-widget/details-widget.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { OptionBtnComponent } from './option-btn/option-btn.component';
+import { MatSliderModule } from '@angular/material/slider';
+import { ModalComponent } from './modal/modal.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { PoiTreeModule } from '../lib/poi-tree/poi-tree.module'
+
 
 @NgModule({
   declarations: [
@@ -37,6 +44,7 @@ import { OptionBtnComponent } from './option-btn/option-btn.component';
     DetailsWidgetComponent,
     ProgressCircleComponent,
     OptionBtnComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,6 +54,11 @@ import { OptionBtnComponent } from './option-btn/option-btn.component';
     MatProgressSpinnerModule,
     MatOptionModule,
     MatSelectModule,
+    MatSliderModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    PoiTreeModule,
   ],
   providers: [DynamicComponentService],
   bootstrap: [AppComponent]

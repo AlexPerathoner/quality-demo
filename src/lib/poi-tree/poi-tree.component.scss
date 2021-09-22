@@ -1,0 +1,20 @@
+
+:host {
+  .filtered {
+    display: none;
+  }
+
+  .color-badge {
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+  }
+
+  ::ng-deep {
+    mat-tree-node.mat-tree-node {
+      min-height: 38px;
+      max-height: 38px;
+      color: #00242B;
+    }
+  }
+}

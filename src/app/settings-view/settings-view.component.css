@@ -1,105 +1,59 @@
 
-
-[data-animation="slideInOutLeft"] .modal-dialog {
-  opacity: 0;
-  animation-name: fadeInOpacity;
-  animation-iteration-count: 1;
+/* Slider */
+::ng-deep .mat-accent .mat-slider-thumb {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-thumb-label {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-track-fill {
+  background-color: black;
 }
 
-@keyframes fadeInOpacity {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-  
-[data-animation="slideInOutLeft"].is-visible .modal-dialog {
-  opacity: 1;
-}
-
-* {
-  padding: 0;
-  margin: 0;
-}
- 
-button {
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: inherit;
-}
-   
-.open-modal {
-  font-weight: bold;
-  background: var(--blue);
-  color: var(--white);
-  padding: .75rem 1.75rem;
+/* POI cards */
+.poi-card {
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border: 1px solid #f2f4f4;
   margin-bottom: 1rem;
-  border-radius: 5px;
-}
- 
-.modal { 
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.55);
-  cursor: pointer;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.1s ease-in;
-  z-index: 999;
 }
 
-.modal-dialog {
-  position: relative;
-  width: 800px;
-  height: 80vh;
-  max-height: 80vh;
-  border-radius: 5px;
-  background: var(--white);
-  overflow: auto;
-  cursor: default;
+.poi-card:hover {
+  background-color: var(--hover);
 }
 
-.modal-dialog > * {
+.poi-type {
+  font-weight: bold;
+  padding-right: 2rem;
+  width: 120px;
+}
+
+.option {
   padding: 1rem;
 }
-  
-.modal-header,
-.modal-footer {
-  background: var(--lightgray);
-}
-  
-.modal-header {
+
+.settings-row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-}
-  
-.modal-header .modal-close {
-  font-size: 1.5rem;
-}
-   
-.modal p + p {
-  margin-top: 1rem;
 }
 
-.modal {
-  visibility: hidden;
-  opacity: 0;
+.subtitle {
+	margin-bottom: .5rem;
+	margin-top: 1rem;
+	display: block;
 }
-   
-.modal.is-visible {
-  visibility: visible;
-  opacity: 1;
+
+.pois-container {
+  overflow-y: auto;
+  max-height: 450px;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+}
+
+.control-buttons {
+	float: right;
+	margin-bottom: 1rem;
+	margin-right: 2rem;
 }

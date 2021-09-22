@@ -1,4 +1,7 @@
- 
+:host {
+	display: inline-block;
+}
+
 .btn-group {
     text-align: center;
 }
@@ -45,12 +48,12 @@
 .loop-overlay-individual-select {
     display: flex;
 }
+
 .label {
     font-size: 10px;
     font-weight: 400;
     text-align: center;
 }
-
 
 button {
     cursor: pointer;

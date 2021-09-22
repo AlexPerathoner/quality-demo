@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
+import { Subject } from 'rxjs'
 import { client } from './global'
 
 
@@ -14,14 +15,15 @@ export class QualityService {
    separateScores = true
 
    // Will be retrieved from the settings panel, which gets them using the poi hierarchy 
-   private selectedPOITypes: PoiType[] = [
+   selectedPoiTypes: PoiType[] = [
       {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
          [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
          {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
          {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
       {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
-      ]
+   ]
    poiHierarchy: PoiHierarchy
+   hierarchyUpdated = new Subject<PoiType[]>()
 
    poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
@@ -37,20 +39,23 @@ export class QualityService {
    }
 
    getOsmTypes(): OSMType[] {
-      return this.poiTypesToOSMTypes(this.selectedPOITypes)
+      return this.poiTypesToOSMTypes(this.selectedPoiTypes)
+   }
+
+   getHierarchyUpdateListener() {
+      return this.hierarchyUpdated.asObservable();
    }
 
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-         this.poiTypesToOSMTypes(this.selectedPOITypes).forEach(osmType => {
-            requestOptions[osmType.value] = {
-               type: 'poiCoverageCount',
-               osmTypes: [osmType],
-               maxEdgeWeight: this.maxTravel,
-               edgeWeight: this.edgeWeight,
-               travelMode: {[this.travelMode]: {}
-            } as TravelMode,
+      this.poiTypesToOSMTypes(this.selectedPoiTypes).forEach(osmType => {
+         requestOptions[osmType.key+"-"+osmType.value] = {
+            type: 'poiCoverageCount',
+            osmTypes: [osmType],
+            maxEdgeWeight: this.maxTravel,
+            edgeWeight: this.edgeWeight,
+            travelMode: {[this.travelMode]: {}} as TravelMode,
             coreServiceUrl: this.coreServiceUrl
          }
       })
@@ -68,6 +73,7 @@ export class QualityService {
    constructor() {
       client.pois.hierarchy().then(response => {
          this.poiHierarchy = response
+         this.hierarchyUpdated.next(this.poiHierarchy)
       })
       
    }

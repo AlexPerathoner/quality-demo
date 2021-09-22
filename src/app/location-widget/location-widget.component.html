@@ -2,7 +2,7 @@
     
     <div class="widget-content-inner">
         <div *ngFor="let location of locations; let i = index">
-            <div class='location' [ngClass]="{'selected-location': location.id == selectedLocation}" (click)='onLocationClicked(location.id)'>
+            <div class='location' [ngClass]="{'selected-location': location.id == selectedLocationId}" (click)='onLocationClicked(location.id)'>
                 <div class="location-info">
                     <span class="location-id"> Marker {{ location.id }} </span>
                     <span class="location-name"> {{ location.name }} </span>

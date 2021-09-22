@@ -1,17 +1,7 @@
 
 .standard-button {
-    border-radius: 0.5rem;
     width: 90px;
-    height: 32px;
-    font-family: "Roboto";
-    font-weight: 600;
-    font-size: small;
-    background-color: var(--selected) !important;
-    float:right;
-    color: white;
-    border: none;
-    margin-right: 0;
-    margin-left: auto;
+    float: right;
 }
 
 .popup-title {
@@ -20,11 +10,6 @@
     font-size: small;
     display: inline-grid;
     font: 13px "Roboto"
-}
-.standard-button:hover {
-    background-color: #ddd !important;
-    color: var(--selected);
-    cursor: pointer;
 }
 
 .popup-content {

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { TravelType } from '@targomo/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PoiType, TravelType } from '@targomo/core';
 import { MapService } from 'services/map.service';
 import { QualityService } from 'services/quality.service';
 @Component({
@@ -7,49 +7,42 @@ import { QualityService } from 'services/quality.service';
   templateUrl: './settings-view.component.html',
   styleUrls: ['./settings-view.component.css']
 })
-export class SettingsViewComponent implements OnChanges {
+export class SettingsViewComponent {
     @Input() isVisible = false
     @Output() closeClicked = new EventEmitter()
+  
+    temporaryTravelMode: TravelType
+    temporaryMaxTravel: number
+    selectedPoiTypes: PoiType[]
 
-    constructor(private map: MapService, private qualityService: QualityService) { }
-
-    ngOnChanges(): void {
-        if(this.isVisible) {
-            this.setupCloseListeners()
-        } else {
-            this.removeListeners()
-        }
+    constructor(private map: MapService, public qualityService: QualityService) {
+      this.temporaryMaxTravel = qualityService.maxTravel
+      this.temporaryTravelMode = qualityService.travelMode
+      this.selectedPoiTypes = [...qualityService.selectedPoiTypes]
     }
 
     onClose() {
-        this.closeClicked.emit("")
-    }
-
-    handleClick = (event) => {
-        if (event.target == document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
-
-    handleKeystroke = (event) => {
-        if (event.key == "Escape" && document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
-
-    private removeListeners() {
-        document.removeEventListener("click", this.handleClick);
-        document.removeEventListener("keyup", this.handleKeystroke);
-    }
-
-    private setupCloseListeners() {
-        document.addEventListener("click", this.handleClick);
-        document.addEventListener("keyup", this.handleKeystroke);        
+      this.closeClicked.emit("")
     }
 
     changeTravelMode(mode: TravelType) {
-        this.qualityService.travelMode = mode
-        this.map.updateMap()
+      this.temporaryTravelMode = mode
     }
 
+    onMaxTravelChanged(event) {
+      this.temporaryMaxTravel = event.value
+      this.map.updateMap()
+    }
+
+    updateSelectedPoiTypes(selectedPoiTypes: PoiType[]) {
+      this.selectedPoiTypes = selectedPoiTypes
+    }
+
+    onSave() {
+      this.qualityService.travelMode = this.temporaryTravelMode
+      this.qualityService.maxTravel = this.temporaryMaxTravel
+      this.qualityService.selectedPoiTypes = [...this.selectedPoiTypes]      
+      this.map.updateMap()
+      this.onClose()
+    }
 }

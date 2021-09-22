@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { QualityService } from 'services/quality.service';
 
 @Component({
   selector: 'option-btn',
@@ -7,20 +6,14 @@ import { QualityService } from 'services/quality.service';
   styleUrls: ['./option-btn.component.css']
 })
 export class OptionBtnComponent {
-
+  @Input() isSelected: boolean
   @Input() name: string
   @Input() iconName: string
   @Output() clicked = new EventEmitter<string>()
 
-  constructor(private quality: QualityService) {
-  }
+  constructor() { }
 
   onClick() {
     this.clicked.emit(this.name.toLowerCase())
   }
-
-  isSelected() {
-    return this.name.toLowerCase() == this.quality.travelMode
-  }
-
 }
