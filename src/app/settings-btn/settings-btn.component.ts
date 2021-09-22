@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core'
 
 @Component({
   selector: 'app-settings-btn',
@@ -8,7 +8,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class SettingsBtnComponent {
   @Output() clicked = new EventEmitter()
 
-  showSettings() {
-    this.clicked.emit("")
+  showSettings(): void {
+    this.clicked.emit('')
   }
+  
 }

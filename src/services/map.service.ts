@@ -8,7 +8,7 @@ import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
 import { LocationNamesService } from './location-names.service'
-import { QualityRequest } from './quality-requests.service'
+import { QualityService } from './quality.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -18,13 +18,14 @@ export class MapService {
   sourceMarkers: NamedMarker[] = []
 
   private temporaryMarker: mapboxgl.Marker = null
+  private markerToSelect: number = null
   
   private contextPopup: mapboxgl.Popup = null
 
   private markersUpdated = new Subject<NamedLatLngId[]>()
   private markerSelected = new Subject<NamedMarker>()
   
-  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, private quality: QualityRequest, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, private qualityService: QualityService, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -43,8 +44,14 @@ export class MapService {
     this.map.setCenter([-0.025,51.51626])
     // Reset zoom
     this.map.setZoom(12)
-
     this.resetMarkers()
+    this.qualityService.selectedPoiTypes = [
+      {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
+         [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
+         {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
+         {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
+      {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
+    ]
   }
 
   removeMarker(markerId: number) {
@@ -57,6 +64,7 @@ export class MapService {
   }
 
   async resetMarkers() {
+    this.markerCount = 0
     for(let i=0; i<this.sourceMarkers.length; i++) {
       this.sourceMarkers[i].remove()
       this.sourceMarkers[i] = null
@@ -64,11 +72,11 @@ export class MapService {
     this.sourceMarkers = []
 
     const startLocations: LatLngId[] = [
-      {lng: -0.075, lat: 51.51, id: 1},
-      {lng: -0.05, lat: 51.51, id: 2},
+      {lng: -0.0652, lat: 51.5238, id: 1},
+      {lng: -0.0753, lat: 51.5098, id: 2},
       {lng: -0.025, lat: 51.51, id: 3},
-      {lng: 0, lat: 51.51, id: 4},
-      {lng: 0.025, lat: 51.51, id: 5}
+      {lng: 0.0481, lat: 51.5157, id: 4},
+      {lng: -0.0103, lat: 51.4914, id: 5}
     ]
     this.quality.registerInitialRequest(startLocations)
     const namedStartLocations: NamedLatLngId[] = await Promise.all(startLocations.map(async (loc) => {
@@ -83,7 +91,7 @@ export class MapService {
       container: 'map',
       style: this.style,
       zoom: 12,
-      center: [-0.025,51.51626]
+      center: [-0.025,51.506]
     })
     this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-left')
     const attributionText = `<a href='//localhost:1313/resources/attribution/' target='_blank'>&copy; Targomo</a>`;
@@ -231,7 +239,6 @@ export class MapService {
   addMarker(markerName: string, latLng: LatLng) {
     this.silentlyAddMarker(markerName, latLng)
     this.updateMap()
-    
   }
 
   async updateMap() {
@@ -263,8 +270,6 @@ export class MapService {
     }
     return null
   }
-
-  private markerToSelect: number = null
 
   selectMarker(markerId: number) {
     const markerFeature: NamedMarker = this.getMarker(markerId)

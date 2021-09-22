@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Corner } from '../types/types';
+import { Component, Input } from '@angular/core'
+import { Corner } from '../types/types'
 
 @Component({
   selector: 'app-sidebar',
@@ -8,5 +8,5 @@ import { Corner } from '../types/types';
 })
 export class SidebarComponent {
   @Input()
-  corner : Corner = "top-left"
+  corner : Corner = 'top-left'
 }

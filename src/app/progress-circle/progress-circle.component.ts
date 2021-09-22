@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core'
 
 @Component({
   selector: 'progress-circle',
@@ -6,7 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./progress-circle.component.css']
 })
 export class ProgressCircleComponent {
-
   @Input() value = 0
   
 }

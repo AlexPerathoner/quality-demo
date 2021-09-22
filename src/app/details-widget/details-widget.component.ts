@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { NamedLatLngIdScores } from 'app/types/types';
-import { QualityRequest } from 'services/quality-requests.service';
+import { Component, Input } from '@angular/core'
+import { NamedLatLngIdScores } from 'app/types/types'
+import { QualityService } from 'services/quality.service'
 
 @Component({
   selector: 'app-details-widget',
@@ -10,6 +10,6 @@ import { QualityRequest } from 'services/quality-requests.service';
 export class DetailsWidgetComponent {
   @Input() location: NamedLatLngIdScores
 
-  constructor(public quality: QualityRequest) { }
+  constructor(public qualityService: QualityService) { }
 
 }

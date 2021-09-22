@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core'
 import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
-import { Marker } from 'mapbox-gl'
+import { Subject } from 'rxjs'
 import { client } from './global'
 
 
 @Injectable({providedIn: 'root'})
 
-export class QualityRequest {
+export class QualityService {
    coreServiceUrl = 'https://api.targomo.com/britishisles/'
    // Travel options
    edgeWeight: EdgeWeightType = 'time' // Can be 'time' or 'distance'
@@ -15,43 +15,47 @@ export class QualityRequest {
    separateScores = true
 
    // Will be retrieved from the settings panel, which gets them using the poi hierarchy 
-   private selectedPOITypes: PoiType[] = [
+   selectedPoiTypes: PoiType[] = [
       {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
          [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
          {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
          {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
       {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
-      ]
+   ]
    poiHierarchy: PoiHierarchy
+   hierarchyUpdated = new Subject<PoiType[]>()
 
-   private poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
+   poiTypesToOsmTypes(PoiTypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
-      POITypes.forEach(POIType => {
-         if(POIType.contents) {
+      PoiTypes.forEach(PoiType => {
+         if(PoiType.contents) {
             //osmTypes.push(...this.poiTypesToOSMTypes(POIType.contents))
-            osmTypes.push({key: "group", value: POIType.id})
+            osmTypes.push({key: "group", value: PoiType.id})
          } else {
-            osmTypes.push({key: POIType.key, value: POIType.value})
+            osmTypes.push({key: PoiType.key, value: PoiType.value})
          }
       })
       return osmTypes
    }
 
    getOsmTypes(): OSMType[] {
-      return this.poiTypesToOSMTypes(this.selectedPOITypes)
+      return this.poiTypesToOsmTypes(this.selectedPoiTypes)
+   }
+
+   getHierarchyUpdateListener() {
+      return this.hierarchyUpdated.asObservable();
    }
 
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-         this.getOsmTypes().forEach(osmType => {
-            requestOptions[osmType.value] = {
-               type: 'poiCoverageCount',
-               osmTypes: [osmType],
-               maxEdgeWeight: this.maxTravel,
-               edgeWeight: this.edgeWeight,
-               travelMode: {[this.travelMode]: {}
-            } as TravelMode,
+      this.poiTypesToOsmTypes(this.selectedPoiTypes).forEach(osmType => {
+         requestOptions[osmType.key + "-" + osmType.value] = {
+            type: 'poiCoverageCount',
+            osmTypes: [osmType],
+            maxEdgeWeight: this.maxTravel,
+            edgeWeight: this.edgeWeight,
+            travelMode: {[this.travelMode]: {}} as TravelMode,
             coreServiceUrl: this.coreServiceUrl
          }
       })
@@ -69,36 +73,9 @@ export class QualityRequest {
    constructor() {
       client.pois.hierarchy().then(response => {
          this.poiHierarchy = response
+         this.hierarchyUpdated.next(this.poiHierarchy)
       })
       
-   }
-
-   // register the initial reachability context request
-   uuid = ''
-   async registerInitialRequest(locations: LatLngId[]){
-      this.uuid = await this.registerNewRequest(locations);
-   }
-
-   async registerNewRequest(locations: LatLngId[]) {
-      let osmTypes = this.getOsmTypes()
-      const options = {
-          maxEdgeWeight: this.maxTravel,
-          travelType: this.travelMode,
-          edgeWeight: this.edgeWeight,
-          osmTypes: osmTypes
-      }
-      // register a new reachability context and return its uuid
-      const uuid = await client.pois.reachabilityRegister(locations, options);
-      return uuid;
-   }
-
-   getPoiUrl()
-   getPoiUrl(uuid: string)
-
-   getPoiUrl(uuid?: string) {
-      if(!uuid) {uuid = this.uuid}
-      return [`https://api.targomo.com/pointofinterest/reachability/${uuid}/{z}/{x}/{y}.mvt?apiKey=${client.serviceKey}` +
-               `&loadAllTags=true&layerType=node`];
    }
 
 }

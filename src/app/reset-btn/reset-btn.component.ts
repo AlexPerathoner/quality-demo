@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MapService } from 'services/map.service';
+import { Component } from '@angular/core'
+import { MapService } from 'services/map.service'
 
 @Component({
   selector: 'app-reset-btn',
@@ -7,9 +7,10 @@ import { MapService } from 'services/map.service';
   styleUrls: ['./reset-btn.component.css']
 })
 export class ResetBtnComponent {
-  constructor(private map: MapService) { }
+  constructor(private mapService: MapService) { }
 
-  onReset() {
-    this.map.reset()
+  onReset(): void {
+    this.mapService.reset()
   }
+  
 }

@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { PopupModel } from './popup.model';
-
+import { Component } from '@angular/core'
+import { PopupModel } from './popup.model'
 
 @Component({
   selector: 'map-popup',
@@ -11,7 +10,7 @@ export class PopupComponent {
 
   public model: PopupModel;
 
-  onClick() {
+  onClick(): void {
     this.model.handleBtnClicked()
   }
 

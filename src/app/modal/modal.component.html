@@ -1,0 +1,10 @@
+
+<div id="modal-{{name}}" [ngClass]="{'is-visible': isVisible, 'modal': isModalOrDialog=='modal', 'dialog': isModalOrDialog=='dialog'}">
+    <div [ngClass]="{'modal-inner': isModalOrDialog=='modal', 'dialog-inner': isModalOrDialog=='dialog'}">
+        <header class="modal-header" *ngIf="showHeader">
+            {{ name }}
+        </header>
+        <ng-content></ng-content>
+
+    </div>
+</div>

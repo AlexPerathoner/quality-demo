@@ -12,6 +12,7 @@
   --black: rgba(0, 0, 0, 0.8);
   --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
   --selected: rgb(38, 69, 75);
+  --hover: rgb(242, 244, 244);
 }
 
 body {
@@ -30,7 +31,6 @@ button.mat-ripple {
   button.mat-ripple:not(.selected-button):not(.option-button):hover {
   background-color: #e0e5e6;
 }
-
 
 
 
@@ -247,7 +247,51 @@ canvas {
 }
 
 .option-button:hover {
-  background-color: #ddd !important;
+  background-color: var(--hover) !important;
   color: var(--selected) !important;
   cursor: pointer;
+}
+
+
+.standard-button {
+  border-radius: 0.5rem;
+  width: 140px;
+  height: 32px;
+  font-family: "Roboto";
+  font-weight: 600;
+  font-size: small;
+  background-color: var(--selected) !important;
+  color: white;
+  border: none;
+  margin-right: 0;
+  margin-left: auto;
+  cursor: pointer;
+}
+.standard-button:hover {
+  background-color: var(--hover) !important;
+  color: var(--selected);
+}
+
+.cancel-button {
+  background-color: white !important;
+  color: var(--selected) !important;
+  margin-right: 1rem;
+}
+.cancel-button:hover {
+  background-color: var(--hover) !important;
+  color: var(--selected) !important;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+/* Checkboxes */
+.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background, .mat-checkbox-checked.mat-primary .mat-checkbox-background {
+	background-color: var(--selected) !important;;
+}
+
+.mat-ripple-element {
+	background-color: var(--selected) !important;;
+
 }

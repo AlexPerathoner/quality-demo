@@ -1,65 +1,51 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { TravelType } from '@targomo/core';
-import { MapService } from 'services/map.service';
-import { QualityRequest } from 'services/quality-requests.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { MatSliderChange } from '@angular/material/slider'
+import { PoiType, TravelType } from '@targomo/core'
+import { MapService } from 'services/map.service'
+import { QualityService } from 'services/quality.service'
+
 @Component({
   selector: 'app-settings-view',
   templateUrl: './settings-view.component.html',
-  styleUrls: ['./settings-view.component.css']
+  styleUrls: ['./settings-view.component.css'],
 })
-export class SettingsViewComponent implements OnChanges {
-    @Input() isVisible = false
-    @Output() closeClicked = new EventEmitter()
+export class SettingsViewComponent {
+  @Input() isVisible = false
+  @Output() closeClicked = new EventEmitter()
 
-    constructor(private map: MapService, private qualityService: QualityRequest) { }
+  temporaryTravelMode: TravelType
+  temporaryMaxTravel: number
+  selectedPoiTypes: PoiType[]
 
-    ngOnChanges(): void {
-        if(this.isVisible) {
-            this.setupCloseListeners()
-        } else {
-            this.removeListeners()
-        }
-    }
+  constructor(private mapService: MapService, public qualityService: QualityService) {
+    this.temporaryMaxTravel = qualityService.maxTravel
+    this.temporaryTravelMode = qualityService.travelMode
+    this.selectedPoiTypes = [...qualityService.selectedPoiTypes]
+  }
 
-    onClose() {
-        this.closeClicked.emit("")
-    }
+  onClose(): void {
+    this.closeClicked.emit('')
+  }
 
-    handleClick = (event) => {
-        if (event.target == document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
+  changeTravelMode(mode: TravelType): void {
+    this.temporaryTravelMode = mode
+  }
 
-    handleKeystroke = (event) => {
-        if (event.key == "Escape" && document.querySelector(".modal.is-visible")) {
-            this.onClose()
-        }
-    }
+  onMaxTravelChanged(event: MatSliderChange): void {
+    this.temporaryMaxTravel = event.value
+    this.mapService.updateMap()
+  }
 
-    private removeListeners() {
-        document.removeEventListener("click", this.handleClick);
-        document.removeEventListener("keyup", this.handleKeystroke);
-    }
+  updateSelectedPoiTypes(selectedPoiTypes: PoiType[]): void {
+    this.selectedPoiTypes = selectedPoiTypes
+  }
 
-    private setupCloseListeners() {
-        document.addEventListener("click", this.handleClick);
-        document.addEventListener("keyup", this.handleKeystroke);        
-    }
-
-    changeTravelMode(mode: TravelType) {
-        // changing buttons style
-        const features = document.getElementsByClassName('travel-mode-btn')
-        for(let i=0; i<features.length; i++) {
-            const element = features[i]
-            if(element.id == mode) {
-                element.classList.add("selected-button")
-            } else {
-                element.classList.remove("selected-button")
-            }
-        }
-        this.qualityService.travelMode = mode
-        this.map.updateMap()
-    }
-
+  onSave(): void {
+    this.qualityService.travelMode = this.temporaryTravelMode
+    this.qualityService.maxTravel = this.temporaryMaxTravel
+    this.qualityService.selectedPoiTypes = [...this.selectedPoiTypes]
+    this.mapService.updateMap()
+    this.onClose()
+  }
+  
 }

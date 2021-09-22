@@ -1,5 +1,4 @@
 <app-widget id="details" title="{{location.name}}" *ngIf="location">
-
     <table>
         <thead>
             <tr>
@@ -8,10 +7,14 @@
                 <th>Score</th>
             </tr>
         </thead>
-        <tr *ngFor="let POIType of this.quality.selectedPOITypes">
+        <tr *ngFor="let POIType of this.qualityService.selectedPoiTypes">
             <td class="row-title">{{ POIType.name }}:</td>
-            <td class="score">{{ this.location.scores[POIType.id] }}</td>
-            <td class="progress-container"><progress-circle [value]="this.location.scores[POIType.id+'-normalized']"></progress-circle></td>
+            <!-- Groups -->
+            <td class="score" *ngIf="POIType.contents">{{ this.location.scores['group-'+POIType.id] }}</td>
+            <td class="progress-container" *ngIf="POIType.contents"><progress-circle [value]="this.location.scores['group-'+POIType.id+'-normalized']"></progress-circle></td>
+            <!-- Tags -->
+            <td class="score" *ngIf="!POIType.contents">{{ this.location.scores[POIType.key+'-'+POIType.value] }}</td>
+            <td class="progress-container" *ngIf="!POIType.contents"><progress-circle [value]="this.location.scores[POIType.key+'-'+POIType.value+'-normalized']"></progress-circle></td>
         </tr>
         <tr class="total-row">
             <td class="row-title">Total:</td>

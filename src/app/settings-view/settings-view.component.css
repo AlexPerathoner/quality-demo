@@ -1,179 +1,59 @@
 
-
-[data-animation="slideInOutLeft"] .modal-dialog {
-    opacity: 0;
-    animation-name: fadeInOpacity;
-    animation-iteration-count: 1;
-}
-  
-  
-@keyframes fadeInOpacity {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-  
-[data-animation="slideInOutLeft"].is-visible .modal-dialog {
-    opacity: 1;
-}
-  
-:root {
-    --lightgray: #efefef;
-    --blue: steelblue;
-    --white: #fff;
-    --black: rgba(0, 0, 0, 0.8);
-    --bounceEasing: cubic-bezier(0.51, 0.92, 0.24, 1.15);
-    --selected: rgb(38, 69, 75);
+/* Slider */
+::ng-deep .mat-accent .mat-slider-thumb {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-thumb-label {
+  background-color: black;
+} 
+::ng-deep .mat-accent .mat-slider-track-fill {
+  background-color: black;
 }
 
-* {
-    padding: 0;
-    margin: 0;
+/* POI cards */
+.poi-card {
+  padding: 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  border: 1px solid #f2f4f4;
+  margin-bottom: 1rem;
 }
 
-button {
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: inherit;
+.poi-card:hover {
+  background-color: var(--hover);
 }
 
-  /*CUSTOM VARIABLES HERE*/
- 
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font: 16px/1.5 sans-serif;
-}
-   
-.btn-group {
-    text-align: center;
-}
-   
-.open-modal {
-    font-weight: bold;
-    background: var(--blue);
-    color: var(--white);
-    padding: .75rem 1.75rem;
-    margin-bottom: 1rem;
-    border-radius: 5px;
+.poi-type {
+  font-weight: bold;
+  padding-right: 2rem;
+  width: 120px;
 }
 
-/*CUSTOM VARIABLES HERE*/
- 
-.modal { 
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.55);
-    cursor: pointer;
-    visibility: hidden;
-    opacity: 0;
-    transition: all 0.1s ease-in;
-    z-index: 999;
+.option {
+  padding: 1rem;
 }
 
-.modal-dialog {
-    position: relative;
-    width: 800px;
-    height: 80vh;
-    max-height: 80vh;
-    border-radius: 5px;
-    background: var(--white);
-    overflow: auto;
-    cursor: default;
-  }
-
-   
-.modal-dialog > * {
-    padding: 1rem;
-  }
-   
-  .modal-header,
-  .modal-footer {
-    background: var(--lightgray);
-  }
-   
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-  }
-   
-  .modal-header .modal-close {
-    font-size: 1.5rem;
-  }
-   
-  .modal p + p {
-    margin-top: 1rem;
-  }
-
-  .modal {
-    visibility: hidden;
-    opacity: 0;
-  }
-   
-  .modal.is-visible {
-    visibility: visible;
-    opacity: 1;
-  }
-
-.loop-overlay-individual-select {
-      display: flex;
+.settings-row {
+  display: flex;
 }
-.label {
-	font-size: 10px;
-	font-weight: 400;
-	text-align: center;
-}
-.tgm-traveltype-select {
-	width: 90%;
-	margin-left: auto;
-	margin-right: auto;
+
+.subtitle {
+	margin-bottom: .5rem;
+	margin-top: 1rem;
 	display: block;
 }
 
-.tgm-simple-button {
-	display: block;
-	float: left;
-	margin-right: 8px;
-	color: rgb(0, 36, 43)
+.pois-container {
+  overflow-y: auto;
+  max-height: 450px;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
 }
 
-.selected-button {
-	background-color: var(--selected);
-	color: rgb(255, 255, 255);
-}
-
-.button-inner {
-	align-items: center;
-	justify-content: center;
-	display: flex;
-}
-
-.option-button {
-	font-family: "Roboto";
-	font-weight: 600;
-	font-size: small;
-	background-color: white;
-	float:right;
-	color: var(--selected);
-}
-
-.option-button:hover {
-	background-color: #ddd;
-	color: var(--selected);
+.control-buttons {
+	float: right;
+	margin-bottom: 1rem;
+	margin-right: 2rem;
 }
