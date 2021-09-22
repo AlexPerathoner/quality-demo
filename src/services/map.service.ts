@@ -15,6 +15,7 @@ import { QualityService } from './quality.service'
 export class MapService {
   map!: mapboxgl.Map
   style = `https://api.maptiler.com/maps/positron/style.json?key=${environment.MapBox_API_KEY}`
+  private layerId = 'poi'
   sourceMarkers: NamedMarker[] = []
 
   private temporaryMarker: mapboxgl.Marker = null
@@ -99,7 +100,7 @@ export class MapService {
     this.resetMarkers()
     this.map.on('load', () => {
 
-      this.addPOILayer()
+      this.addPoiLayer()
       this.map.on('click', (e) => {     
         // Clicking on the map while a marker is selected will unselect the marker
         // Clicking on the map while the context popup is shown will hide the popup
@@ -124,16 +125,25 @@ export class MapService {
     })
   }
 
-  
+  showPoiLayer(): void {
+    this.map.setLayoutProperty(this.layerId, 'visibility', 'visible');
+  }
 
-  private addPOILayer() {
+  hidePoiLayer(): void {
+    this.map.setLayoutProperty(this.layerId, 'visibility', 'none');
+  }
+
+  private addPoiLayer(): void {
     this.map.addLayer({
-      'id': 'poi',
+      'id': this.layerId,
       'type': 'circle',
       'source': {
           'type': 'vector',
           'tiles': this.qualityService.getPoiUrl(),
           'minzoom': 9
+      },
+      'layout': {
+        'visibility': 'none'
       },
       'source-layer': 'poi',
       'paint': {

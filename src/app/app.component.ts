@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MapService } from 'services/map.service';
 import { NamedLatLngIdScores } from './types/types';
 
 @Component({
@@ -11,8 +12,15 @@ export class AppComponent {
   settingsModalIsVisible = false
   selectedLocation: NamedLatLngIdScores
 
+  constructor(private mapService: MapService) { }
+
   selectLocation(event) {
     this.selectedLocation = event
+    if(event) {
+      this.mapService.showPoiLayer()
+    } else {
+      this.mapService.hidePoiLayer()
+    }
   }
   
 }
