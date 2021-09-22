@@ -6,7 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./progress-circle.component.css']
 })
 export class ProgressCircleComponent {
-
   @Input() value = 0
   
 }

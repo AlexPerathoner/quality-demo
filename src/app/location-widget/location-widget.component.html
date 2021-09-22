@@ -1,5 +1,4 @@
 <app-widget id="locations" title="Location ranking:" scrollable="true">
-    
     <div class="widget-content-inner">
         <div *ngFor="let location of locations; let i = index">
             <div class='location' [ngClass]="{'selected-location': location.id == selectedLocationId}" (click)='onLocationClicked(location.id)'>

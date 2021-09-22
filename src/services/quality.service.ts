@@ -25,21 +25,21 @@ export class QualityService {
    poiHierarchy: PoiHierarchy
    hierarchyUpdated = new Subject<PoiType[]>()
 
-   poiTypesToOSMTypes(POITypes: PoiType[]): OSMType[] {
+   poiTypesToOsmTypes(PoiTypes: PoiType[]): OSMType[] {
       let osmTypes: OSMType[] = []
-      POITypes.forEach(POIType => {
-         if(POIType.contents) {
+      PoiTypes.forEach(PoiType => {
+         if(PoiType.contents) {
             //osmTypes.push(...this.poiTypesToOSMTypes(POIType.contents))
-            osmTypes.push({key: "group", value: POIType.id})
+            osmTypes.push({key: "group", value: PoiType.id})
          } else {
-            osmTypes.push({key: POIType.key, value: POIType.value})
+            osmTypes.push({key: PoiType.key, value: PoiType.value})
          }
       })
       return osmTypes
    }
 
    getOsmTypes(): OSMType[] {
-      return this.poiTypesToOSMTypes(this.selectedPoiTypes)
+      return this.poiTypesToOsmTypes(this.selectedPoiTypes)
    }
 
    getHierarchyUpdateListener() {
@@ -49,8 +49,8 @@ export class QualityService {
 
    private createRequestOptions(): QualityRequestOptions {
       let requestOptions: QualityRequestOptions = {}
-      this.poiTypesToOSMTypes(this.selectedPoiTypes).forEach(osmType => {
-         requestOptions[osmType.key+"-"+osmType.value] = {
+      this.poiTypesToOsmTypes(this.selectedPoiTypes).forEach(osmType => {
+         requestOptions[osmType.key + "-" + osmType.value] = {
             type: 'poiCoverageCount',
             osmTypes: [osmType],
             maxEdgeWeight: this.maxTravel,

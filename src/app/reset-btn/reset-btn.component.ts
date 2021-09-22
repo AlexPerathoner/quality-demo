@@ -7,9 +7,9 @@ import { MapService } from 'services/map.service';
   styleUrls: ['./reset-btn.component.css']
 })
 export class ResetBtnComponent {
-  constructor(private map: MapService) { }
+  constructor(private mapService: MapService) { }
 
   onReset() {
-    this.map.reset()
+    this.mapService.reset()
   }
 }

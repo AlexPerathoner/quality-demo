@@ -17,6 +17,7 @@ export class MapService {
   sourceMarkers: NamedMarker[] = []
 
   private temporaryMarker: mapboxgl.Marker = null
+  private markerToSelect: number = null
   
   private contextPopup: mapboxgl.Popup = null
 
@@ -185,7 +186,6 @@ export class MapService {
   addMarker(markerName: string, latLng: LatLng) {
     this.silentlyAddMarker(markerName, latLng)
     this.updateMap()
-    
   }
 
   updateMap() {
@@ -202,8 +202,6 @@ export class MapService {
     }
     return null
   }
-
-  private markerToSelect: number = null
 
   selectMarker(markerId: number) {
     const markerFeature: NamedMarker = this.getMarker(markerId)

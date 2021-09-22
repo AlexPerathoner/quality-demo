@@ -10,6 +10,6 @@ import { QualityService } from 'services/quality.service';
 export class DetailsWidgetComponent {
   @Input() location: NamedLatLngIdScores
 
-  constructor(public quality: QualityService) { }
+  constructor(public qualityService: QualityService) { }
 
 }

@@ -1,5 +1,4 @@
 <app-widget id="details" title="{{location.name}}" *ngIf="location">
-
     <table>
         <thead>
             <tr>
@@ -8,7 +7,7 @@
                 <th>Score</th>
             </tr>
         </thead>
-        <tr *ngFor="let POIType of this.quality.selectedPoiTypes">
+        <tr *ngFor="let POIType of this.qualityService.selectedPoiTypes">
             <td class="row-title">{{ POIType.name }}:</td>
             <!-- Groups -->
             <td class="score" *ngIf="POIType.contents">{{ this.location.scores['group-'+POIType.id] }}</td>

@@ -7,8 +7,6 @@ export class NamedMarker extends Marker {
     id: number
 }
 
-
-
 export interface NamedLatLngId extends LatLngId {
     name: string
 }

@@ -9,10 +9,10 @@ import { MapService } from '../../services/map.service';
 })
 export class MapComponent implements OnInit {
 
-  constructor(private map: MapService) { }
+  constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
-    this.map.buildMap()
+    this.mapService.buildMap()
   }
 
 }

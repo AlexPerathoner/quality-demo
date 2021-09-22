@@ -24,13 +24,13 @@ export class LocationWidgetComponent implements OnInit {
   @ViewChild('relativeBtn') relativeBtn;
   @ViewChild('absoluteBtn') absoluteBtn;
 
-  constructor(private quality: QualityService, private map: MapService, private ref: ChangeDetectorRef) {
+  constructor(private mapService: MapService, private qualityService: QualityService, private ref: ChangeDetectorRef) {
     ref.detach()
   }
 
   ngOnInit(): void {
     this.updateLocations()
-    this.map.getMarkerUpdateListener()
+    this.mapService.getMarkerUpdateListener()
       .subscribe(async (newLocations) => {
         this.locations = await this.calculateLocationScores(newLocations)
         if(this.selectedLocationId) {
@@ -38,14 +38,14 @@ export class LocationWidgetComponent implements OnInit {
         }
         this.ref.detectChanges()
       })
-    this.map.getMarkerSelectionListener()
+    this.mapService.getMarkerSelectionListener()
       .subscribe((marker) => {
         this.handleSelectionMarker(marker)
       })
   }
 
   async updateLocations() {
-    this.locations = await this.calculateLocationScores(this.map.getMarkersLocations())
+    this.locations = await this.calculateLocationScores(this.mapService.getMarkersLocations())
     this.ref.detectChanges()
   }
 
@@ -58,7 +58,7 @@ export class LocationWidgetComponent implements OnInit {
 
   private normalizeScores(scoredLocations: NamedLatLngIdScores[]): NamedLatLngIdScores[] {
     // Normalizing scores for each criterion
-    Object.values(this.quality.getOsmTypes()).forEach(osmType => {
+    Object.values(this.qualityService.getOsmTypes()).forEach(osmType => {
       const scores = scoredLocations.map(k => k.scores[osmType.key+"-"+osmType.value])
       const max = Math.max(...scores)
       const min = Math.min(...scores)
@@ -90,7 +90,7 @@ export class LocationWidgetComponent implements OnInit {
 
   async calculateLocationScores(sourceLocations: NamedLatLngId[]): Promise<NamedLatLngIdScores[]> {
     // Quality request
-    const scoresResult = Object.values(await this.quality.getScores(sourceLocations))
+    const scoresResult = Object.values(await this.qualityService.getScores(sourceLocations))
     // Adding name of markers
     let namedResult = this.nameScoredResults(sourceLocations, scoresResult)
     namedResult = this.normalizeScores(namedResult)
@@ -117,7 +117,7 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   onLocationClicked(markerId: number) {
-    this.map.selectMarker(markerId)
+    this.mapService.selectMarker(markerId)
   }
 
   selectMarker(markerId: number) {
@@ -127,7 +127,7 @@ export class LocationWidgetComponent implements OnInit {
   }
 
   deleteMarker(id) {
-    this.map.removeMarker(id)
+    this.mapService.removeMarker(id)
   }
 
 }

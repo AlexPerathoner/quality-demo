@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject } from 'rxjs'
-import { select, Store } from '@ngrx/store'
-import { take, filter } from 'rxjs/operators'
-import { PoiTreeModule } from './poi-tree.module'
 import { PoiType } from '@targomo/core'
 import { QualityService } from 'services/quality.service'
 
