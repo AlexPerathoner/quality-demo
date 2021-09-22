@@ -8,6 +8,7 @@ import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
 import { LocationNamesService } from './location-names.service'
+import { QualityService } from './quality.service'
 
 @Injectable({providedIn: 'root'})
 
@@ -24,7 +25,7 @@ export class MapService {
   private markersUpdated = new Subject<NamedLatLngId[]>()
   private markerSelected = new Subject<NamedMarker>()
   
-  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, @Optional() @SkipSelf() sharedService?: MapService) {
+  constructor(private dynamicComponentService: DynamicComponentService, private reverseGeocoding: LocationNamesService, private qualityService: QualityService, @Optional() @SkipSelf() sharedService?: MapService) {
     if(sharedService) {
       throw new Error("Map Service already loaded!")
     }
@@ -43,8 +44,14 @@ export class MapService {
     this.map.setCenter([-0.025,51.51626])
     // Reset zoom
     this.map.setZoom(12)
-
     this.resetMarkers()
+    this.qualityService.selectedPoiTypes = [
+      {"id":"g_eat-out","name":"Gastronomy","description":"Restaurants and other places for eating out","type":"CATEGORY","contents":
+         [{"id":"fast_food","name":"Fast food","description":"Place concentrating on very fast counter-only service and take-away food","key":"amenity","value":"fast_food","type":"TAG"},
+         {"id":"food_court","name":"Food court","description":"Place with sit-down facilities shared by multiple self-service food vendors","key":"amenity","value":"food_court","type":"TAG"},
+         {"id":"restaurant","name":"Restaurant","description":"Place selling full sit-down meals with servers","key":"amenity","value":"restaurant","type":"TAG"}]},
+      {"id": "cafe","name": "Cafe","description": "Place with sit-down facilities selling beverages and light meals and/or snacks","key": "amenity","value": "cafe","type": "TAG"}
+    ]
   }
 
   removeMarker(markerId: number) {
@@ -57,6 +64,7 @@ export class MapService {
   }
 
   async resetMarkers() {
+    this.markerCount = 0
     for(let i=0; i<this.sourceMarkers.length; i++) {
       this.sourceMarkers[i].remove()
       this.sourceMarkers[i] = null
