@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { PoiTypeNodeFlat, PoiTypeNode, ChecklistDatabase } from './poi-type-tree.service'
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree'
 import { PoiType } from '@targomo/core'
+import { QualityService } from 'services/quality.service'
 
 @Component({
   selector: 'tgm-poi-tree',
@@ -48,13 +49,16 @@ export class PoiTreeComponent {
   checklistSelection = new SelectionModel<PoiTypeNodeFlat>(true)
   cleanSelection: PoiTypeNodeFlat[] = []
 
-  constructor(private _database: ChecklistDatabase) {
+  constructor(private _database: ChecklistDatabase, private qualityService: QualityService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren)
     this.treeControl = new FlatTreeControl<PoiTypeNodeFlat>(this.getLevel, this.isExpandable)
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener)
 
     this._database.dataChange.subscribe(data => {
       this.dataSource.data = data
+    })
+    qualityService.getHierarchyUpdateListener().subscribe(hierarchy => {
+      this.alreadySelectedNodes = this.qualityService.selectedPoiTypes
     })
   }
 
