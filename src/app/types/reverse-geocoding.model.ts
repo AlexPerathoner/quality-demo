@@ -32,8 +32,8 @@ export interface Address {
 
 export interface Namedetails {
     name: string;
-    "name:ar": string;
-    "name:fr": string;
+    'name:ar': string;
+    'name:fr': string;
 }
 
 export function responseFailed(response: ReverseGeocodingResponse): response is ReverseGeocodingFailed {

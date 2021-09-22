@@ -1,7 +1,7 @@
-import { LatLngId, LatLngIdScores } from "@targomo/core"
-import { Marker } from "mapbox-gl"
+import { LatLngId, LatLngIdScores } from '@targomo/core'
+import { Marker } from 'mapbox-gl'
 
-export type Corner = "top-left" | "top-right" | "bottom-left" | "bottom-right"
+export type Corner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 export class NamedMarker extends Marker {
     name: string
     id: number

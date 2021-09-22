@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PoiType, TravelType } from '@targomo/core';
-import { MapService } from 'services/map.service';
-import { QualityService } from 'services/quality.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { PoiType, TravelType } from '@targomo/core'
+import { MapService } from 'services/map.service'
+import { QualityService } from 'services/quality.service'
 
 @Component({
-  selector: 'app-settings-view',
-  templateUrl: './settings-view.component.html',
-  styleUrls: ['./settings-view.component.css']
+    selector: 'app-settings-view',
+    templateUrl: './settings-view.component.html',
+    styleUrls: ['./settings-view.component.css']
 })
 export class SettingsViewComponent {
   @Input() isVisible = false
@@ -17,33 +17,33 @@ export class SettingsViewComponent {
   selectedPoiTypes: PoiType[]
 
   constructor(private mapService: MapService, public qualityService: QualityService) {
-    this.temporaryMaxTravel = qualityService.maxTravel
-    this.temporaryTravelMode = qualityService.travelMode
-    this.selectedPoiTypes = [...qualityService.selectedPoiTypes]
+      this.temporaryMaxTravel = qualityService.maxTravel
+      this.temporaryTravelMode = qualityService.travelMode
+      this.selectedPoiTypes = [...qualityService.selectedPoiTypes]
   }
 
   onClose() {
-    this.closeClicked.emit("")
+      this.closeClicked.emit('')
   }
 
   changeTravelMode(mode: TravelType) {
-    this.temporaryTravelMode = mode
+      this.temporaryTravelMode = mode
   }
 
   onMaxTravelChanged(event) {
-    this.temporaryMaxTravel = event.value
-    this.mapService.updateMap()
+      this.temporaryMaxTravel = event.value
+      this.mapService.updateMap()
   }
 
   updateSelectedPoiTypes(selectedPoiTypes: PoiType[]) {
-    this.selectedPoiTypes = selectedPoiTypes
+      this.selectedPoiTypes = selectedPoiTypes
   }
 
   onSave() {
-    this.qualityService.travelMode = this.temporaryTravelMode
-    this.qualityService.maxTravel = this.temporaryMaxTravel
-    this.qualityService.selectedPoiTypes = [...this.selectedPoiTypes]      
-    this.mapService.updateMap()
-    this.onClose()
+      this.qualityService.travelMode = this.temporaryTravelMode
+      this.qualityService.maxTravel = this.temporaryMaxTravel
+      this.qualityService.selectedPoiTypes = [...this.selectedPoiTypes]      
+      this.mapService.updateMap()
+      this.onClose()
   }
 }
