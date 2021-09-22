@@ -8,7 +8,7 @@
     "serve-old-config": "ng serve",
     "build": "npm run config -- --environment=prod && ng build",
     "watch": "ng build --watch --configuration development",
-    "lint": "./node_modules/.bin/eslint ./src/app/**/*.ts",
+    "lint": "./node_modules/.bin/eslint ./src/app/**/*.ts ./src/**/*.ts",
     "test": "ng test",
     "postinstall": "ngcc"
   },
