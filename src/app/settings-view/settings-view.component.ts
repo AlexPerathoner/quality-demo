@@ -35,8 +35,7 @@ export class SettingsViewComponent {
     }
 
     updateSelectedPoiTypes(selectedPoiTypes: PoiType[]) {
-      console.log("Changed" + selectedPoiTypes.length);
-      
+      this.poiTypesService.selectedPOITypes = selectedPoiTypes
     }
 
     onSave() {
