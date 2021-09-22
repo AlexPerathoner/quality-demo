@@ -8,7 +8,6 @@ import { DynamicComponentService } from './dynamic-component.service'
 import { PopupComponent } from 'app/popup/popup.component'
 import { PopupModel } from 'app/popup/popup.model'
 import { LocationNamesService } from './location-names.service'
-import { QualityService } from './quality.service'
 import { PoiService } from './poi.service'
 import { ClientOptionService } from './client-option.service'
 
@@ -19,6 +18,7 @@ export class MapService {
   style = `https://api.maptiler.com/maps/positron/style.json?key=${environment.MapBox_API_KEY}`
   private layerId = 'poi'
   sourceMarkers: NamedMarker[] = []
+  selectedMarker: NamedMarker = null
 
   private temporaryMarker: mapboxgl.Marker = null
   private markerToSelect: number = null
@@ -31,7 +31,6 @@ export class MapService {
   constructor(
     private dynamicComponentService: DynamicComponentService,
     private reverseGeocoding: LocationNamesService,
-    private qualityService: QualityService,
     private poiService: PoiService,
     private clientOption: ClientOptionService,
     @Optional() @SkipSelf() sharedService?: MapService)
@@ -134,13 +133,30 @@ export class MapService {
     })
   }
 
-  showPoiLayer(location: LatLngId): void {
-    
+  showPoiLayer(): void {
     this.map.setLayoutProperty(this.layerId, 'visibility', 'visible');
   }
 
   hidePoiLayer(): void {
     this.map.setLayoutProperty(this.layerId, 'visibility', 'none');
+  }
+
+  updatePoiLayerSource(): void {
+    this.changePoiLayerSource({...this.selectedMarker.getLngLat(), id: this.selectedMarker.id})
+  }
+
+  async changePoiLayerSource(location: LatLngId): Promise<void> {
+    const poiReachabilityUuid = await this.poiService.registerNewRequest(location);
+    const mapSource: any = this.map.getSource('poi')
+    mapSource.tiles = this.poiService.getPoiUrl(poiReachabilityUuid);
+
+    const sourceCache = (this.map as any).style.sourceCaches['poi'];
+    // Force a refresh, so that the map will be repainted without you having to touch the map
+    if(sourceCache != null) {
+      (this.map as any).style.sourceCaches['poi'].clearTiles();
+      (this.map as any).style.sourceCaches['poi'].update((this.map as any).transform);
+    }
+    this.map.triggerRepaint();
   }
 
   private addPoiLayer(): void {
@@ -263,22 +279,9 @@ export class MapService {
 
   async updateMap() {
     //this.mapLoading.show()
-    const poiReachabilityUuid = await this.poiService.registerNewRequest(this.getMarkersLocations());
-    const mapSource: any = this.map.getSource('poi')
-    
-    mapSource.tiles = this.poiService.getPoiUrl(poiReachabilityUuid);
-    this.markersUpdated.next(this.getMarkersLocations())
-
-    const sourceCache = (this.map as any).style.sourceCaches['poi'];
-    // Force a refresh, so that the map will be repainted without you having to touch the map
-    if(sourceCache != null) {
-      console.log("ASd");
-      
-      (this.map as any).style.sourceCaches['poi'].clearTiles();
-      (this.map as any).style.sourceCaches['poi'].update((this.map as any).transform);
-      
-    }
-    this.map.triggerRepaint();
+    let locations = this.getMarkersLocations()
+    this.markersUpdated.next(locations)
+    this.updatePoiLayerSource()
     //this.mapLoading.hide()
   }
 
@@ -292,25 +295,35 @@ export class MapService {
   }
 
   selectMarker(markerId: number) {
-    const markerFeature: NamedMarker = this.getMarker(markerId)
-    this.markerSelected.next(markerFeature)
-    this.unselectMarker()
-    markerFeature.getElement().id = "selected-marker" // Setting id to current marker
+    this.unselectMarker() // Unselecting previously selected marker
+    const markerFeature: NamedMarker = this.getMarker(markerId) // Getting marker to select 
+    this.selectedMarker = markerFeature
+    this.markerSelected.next(markerFeature) // Sending subject to other classes
+    markerFeature.getElement().id = "selected-marker" // Setting id to current marker to update style
     this.hideContextMenu()
     this.flyTo(markerFeature)
+
+    this.showPoiLayer()
+    this.updatePoiLayerSource()
   }
 
-  isMarkerSelected() {
-    return (document.getElementById('selected-marker'))
+  isMarkerSelected(): boolean {
+    return this.getSelectedMarker() != null
+  }
+
+  getSelectedMarker(): HTMLElement {
+    return document.getElementById('selected-marker')
   }
 
   unselectMarker() {
-    const oldSelectedMarker = this.isMarkerSelected() // Removing id from previous marker
+    const oldSelectedMarker = this.getSelectedMarker() // Removing id from previous marker, updates style
     if(oldSelectedMarker) {oldSelectedMarker.id = ""}
+    this.selectedMarker = null
+    this.hidePoiLayer()
   }
 
   flyTo(feature: mapboxgl.Marker) {
-    let selectionZoom = 14
+    let selectionZoom = 13
     if(this.map.getZoom() > selectionZoom) {
       selectionZoom = this.map.getZoom()
     }

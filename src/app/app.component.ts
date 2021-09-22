@@ -12,15 +12,10 @@ export class AppComponent {
   settingsModalIsVisible = false
   selectedLocation: NamedLatLngIdScores
 
-  constructor(private mapService: MapService) { }
+  constructor() { }
 
   selectLocation(event) {
     this.selectedLocation = event
-    if(event) {
-      this.mapService.showPoiLayer(event)
-    } else {
-      this.mapService.hidePoiLayer()
-    }
   }
   
 }
