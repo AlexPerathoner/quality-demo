@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { EdgeWeightType, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
+import { EdgeWeightType, LatLng, LatLngId, OSMType, PoiHierarchy, PoiType, QualityRequestOptions, TravelMode, TravelType } from '@targomo/core'
 import { Subject } from 'rxjs'
 import { client } from './global'
 
@@ -83,7 +83,9 @@ export class QualityService {
     this.uuid = await this.registerNewRequest(locations);
   }
 
-  async registerNewRequest(locations: LatLngId[]) {
+  async registerNewRequest(location: LatLngId[])
+  async registerNewRequest(location: LatLngId)
+  async registerNewRequest(location: LatLngId | LatLngId[]) {
     let osmTypes = this.getOsmTypes()
     const options = {
       maxEdgeWeight: this.maxTravel,
@@ -92,7 +94,13 @@ export class QualityService {
       osmTypes: osmTypes
     }
     // register a new reachability context and return its uuid
-    const uuid = await client.pois.reachabilityRegister(locations, options);
+    let sources: LatLngId[]
+    if(location instanceof Array) {
+      sources = location
+    } else {
+      sources = [location]
+    }
+    const uuid = await client.pois.reachabilityRegister(sources, options);
     return uuid;
   }
 
