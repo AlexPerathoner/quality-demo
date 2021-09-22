@@ -14,4 +14,5 @@ export class AppComponent {
   selectLocation(event) {
     this.selectedLocation = event
   }
+  
 }
