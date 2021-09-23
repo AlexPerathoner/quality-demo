@@ -177,14 +177,7 @@ export class MapService {
         'circle-color': [
           'case',
           ['!=', ['get', 'edgeWeight'], null],
-          [
-            'interpolate-lab',
-            ['exponential', 1],
-            ['get', 'edgeWeight'],
-            0, 'hsl(120,70%,50%)',
-            this.clientOption.maxTravel/2, 'hsl(60,70%,50%)',
-            this.clientOption.maxTravel, 'hsl(0,70%,50%)'
-          ],
+          '#666',
           'rgba(0,0,0,0)'
         ]
       }
